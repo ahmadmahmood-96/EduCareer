@@ -1,0 +1,27 @@
+.container {
+	width: 100vw;
+	height: 100vh; /* Adjusted height for better centering */
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-direction: column;
+	text-align: center; /* Center text */
+  }
+  
+  .success_img {
+	width: 200px; /* Adjust the width to your preference */
+	height: auto; /* Maintain aspect ratio */
+	margin-bottom: 20px; /* Add some space below the image */
+  }
+  
+.green_btn {
+	border: none;
+	outline: none;
+	padding: 12px 0;
+	background-color:purple;
+	border-radius: 20px;
+	width: 180px;
+	font-weight: bold;
+	font-size: 14px;
+	cursor: pointer;
+}

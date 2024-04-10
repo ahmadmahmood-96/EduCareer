@@ -1,0 +1,8 @@
+results/
+input/
+__pycache__/
+.env
+.venv
+env/
+venv/
+uploaded_file.pdf

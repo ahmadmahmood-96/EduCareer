@@ -1,0 +1,94 @@
+* {
+    box-sizing: border-box;
+  }
+  
+  body {
+    --bg-color: #2E3D49;
+    margin: 0;
+    padding: 0;
+    font-family: sans-serif;
+    background-color: var(--bg-color);
+  }
+  
+  main {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100vw;
+    height: 100vh;
+    padding: 1.5vmax;
+  }
+  
+  table {
+    --accent-color: #fff;
+    --text-color: #02B3E4;
+    --border-color: #0E8FB5;
+    width: 100vw;
+    height: 100%;
+    text-align: center;
+    color: var(--text-color);
+    border-collapse: separate;
+    border-spacing: 0;
+  }
+  
+  td {
+    width: 10%;
+    height: 10%;
+    transform-origin: center;
+    transition: none;
+  }
+  
+  td + td {
+    border-left: 1px solid var(--border-color);
+  }
+  
+  tr + tr td {
+    border-top: 1px solid var(--border-color);
+  }
+  
+  td:hover,
+  tr:hover td:first-child,
+  .row-1 .on-hover {
+    color: var(--accent-color);
+    background-color: var(--bg-color);
+    border: 1px solid var(--accent-color);
+    border-radius: 5px;
+  }
+  
+  td:hover {
+    transform: scale(1.1);
+    transition: all .05s;
+  }
+  
+  tr:hover td:first-child,
+  .row-1 .on-hover {
+    transform: scale(1.2);
+    transition: all .1s;
+  }
+  
+  .row-1 td,
+  .col-1 {
+    font-weight: bold;
+    color: var(--accent-color);
+  }
+  
+  @media (min-width: 860px) and (max-width: 1279px) {
+    table {
+      font-size: 20px;
+    }
+  }
+  
+  @media (min-width: 1280px) and (max-width: 1919px) {
+    table {
+      width: 70vw;
+      font-size: 24px;
+    }
+  }
+  
+  @media (min-width: 1920px) {
+    table {
+      width: 50vw;
+      font-size: 28px;
+    }
+  }
+  
