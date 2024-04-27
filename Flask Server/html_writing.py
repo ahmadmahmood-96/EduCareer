@@ -117,7 +117,7 @@ def papers_comparison(save_dir: str, ind: int, text1: list, text2: list, filenam
     # comp_path = path.join(save_dir, str(ind) + '.html')
     # print(comp_path)
     #par = 'D:\\Projects\\FYP\\studybuddy-plagiarism-checker\\templates\\template.html'
-    par = 'D:\\Ayesha FYP\\Flask Server\\templates\\template.html'
+    par = 'C:\\Users\\Dell\\Desktop\\EduCareer\\Flask Server\\templates\\template.html'
 
     # par = r'C:\Users\user\Desktop\plag check projects\plagiarism_checker-wazzabeee\studybuddy-plagiarism-checker\templates\template.html'
     copy(par, save_dir)  # Copy comparison template to curr dir

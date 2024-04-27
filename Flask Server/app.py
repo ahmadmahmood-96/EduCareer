@@ -16,7 +16,7 @@ app = Flask(__name__)
 CORS(app)
 
 # input_dir = 'D:\\Projects\\FYP\\studybuddy-plagiarism-checker\\input'
-input_dir = 'D:\\Ayesha FYP\\Flask Server\\input'
+input_dir = 'C:\\Users\\Dell\\Desktop\\EduCareer\\Flask Server\\input'
 
 # Initialize T5 model
 question_tokenizer = AutoTokenizer.from_pretrained("ramsrigouthamg/t5_squad_v1")
@@ -160,8 +160,8 @@ def delete_files_in_directory(directory):
 @app.route('/uploader', methods=['GET', 'POST'])
 def upload_file():
     
-    in_path = 'D:\\Ayesha FYP\\Flask Server\\input'
-    out_path = 'D:\\Ayesha FYP\\Flask Server\\results'
+    in_path = 'C:\\Users\\Dell\\Desktop\\EduCareer\\Flask Server\\input'
+    out_path = 'C:\\Users\\Dell\\Desktop\\EduCareer\\Flask Server\\results'
     delete_files_in_directory(in_path)
     delete_files_in_directory(out_path)
 
@@ -186,4 +186,4 @@ def upload_file():
     return 'okay'
 
 if __name__ == '__main__':
-    app.run(host='192.168.0.107', debug=False, port=5000)
+    app.run(host='192.168.1.18', debug=False, port=5000)
