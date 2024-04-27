@@ -31,14 +31,9 @@ const HeaderComponent = ({ collapsed, handleToggle }) => {
             />
           )}
         </Tooltip>
-        <Image
-          src="/AutoAidLogo.png"
-          alt="AutoAid Logo"
-          preview={false}
-          width={110}
-          onClick={() => navigate("/home")}
-          style={{ cursor: "pointer", filter: "invert(100%)" }}
-        />
+        <Typography.Text
+        style={{ fontSize: 17, fontWeight: "normal", color: "#fbfbfb" }}>EduCareer Dashboard</Typography.Text>
+
       </Space>
       <Space size="large">
         <Typography.Text
