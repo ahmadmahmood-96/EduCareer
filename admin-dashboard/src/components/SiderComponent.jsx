@@ -2,6 +2,7 @@ import React from "react";
 import { Menu } from "antd";
 import { useNavigate } from "react-router-dom";
 import {
+  SolutionOutlined ,
   LogoutOutlined,
   AppstoreOutlined,
   HomeOutlined,
@@ -57,6 +58,7 @@ const items = [
     ],
   },
   { key: "/home/user-details", label: "User Details", icon: <UserOutlined /> },
+  { key: "/home/support-section", label: "Support Section", icon: <SolutionOutlined /> },
   {
     key: "/home/order-details",
     label: "Order Details",

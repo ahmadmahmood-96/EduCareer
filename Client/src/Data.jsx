@@ -42,9 +42,14 @@ export const navLinks = [
     id: 4,
     href: "teacher",
     link: "Teacher",
-  },
-  {
+  },{
     id: 5,
+    href: "support",
+    link: "Support",
+  },
+
+  {
+    id: 6,
     href: "contact",
     link: "Contact",
   },

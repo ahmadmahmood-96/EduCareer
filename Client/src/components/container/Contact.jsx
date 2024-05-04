@@ -4,15 +4,15 @@ const Contact = () => {
   return (
     <div className="section" id="contact">
       <div className="text-center max-w-[600px] mx-auto">
-        <div className="sm:text-3xl text-2xl font-bold mb-5">
+        {/* <div className="sm:text-3xl text-2xl font-bold mb-5">
           Subscribe Newsletter
-        </div>
+        </div> */}
         {/* <p className="text-sm leading-7 text-gray">
           Lorem ipsum dolor sit amet consectetur adipisicing elit. Harum autem
           minus doloribus voluptatem illo velit quia eum aperiam! Repudiandae,
           tempore. Lorem ipsum dolor sit amet.
         </p> */}
-        <motion.form
+        {/* <motion.form
           initial={{ scale: 0 }}
           whileInView={{ scale: 1 }}
           transition={{ duration: 0.3 }}
@@ -26,9 +26,9 @@ const Contact = () => {
           <button className="text-sm text-white bg-Teal sm:p-3 p-2 shadow-md font-bold">
             Subscribe
           </button>
-        </motion.form>
+        </motion.form> */}
       </div>
-      <div className="text-center justify-center  mt-10 max-w-[600px] mx-auto">
+      <div className="text-center justify-center max-w-[600px] mx-auto">
         <div className="text-gray sm:text-3xl text-2xl font-bold mb-5">
           Contact Us
         </div>

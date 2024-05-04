@@ -21,8 +21,8 @@ from utils import wait_for_file, get_student_names, parse_options
 
 def main() -> None:
     
-    in_dir = 'C:\\Users\\Dell\\Desktop\\EduCareer\\Flask Server\\input'
-    out_dir = 'C:\\Users\\Dell\\Desktop\\EduCareer\\Flask Server\\results'
+    in_dir = 'C:\\Users\\HP\\Desktop\\EduCareer\\EduCareer\\Flask Server\\input'
+    out_dir = 'C:\\Users\\HP\\Desktop\\EduCareer\\EduCareer\\Flask Server\\results'
     
     block_size = 2
    
