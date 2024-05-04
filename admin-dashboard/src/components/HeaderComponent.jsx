@@ -10,7 +10,7 @@ const HeaderComponent = ({ collapsed, handleToggle }) => {
 
   useEffect(() => {
     if (localStorage.getItem("token")) {
-      const { name } = decodeToken(localStorage.getItem("token"));
+      const { name } = localStorage.getItem("token");
       setName(name);
     }
   }, [name, navigate]);

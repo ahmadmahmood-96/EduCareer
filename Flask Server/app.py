@@ -11,6 +11,9 @@ from nltk.corpus import wordnet as wn
 from nltk.tokenize import word_tokenize
 from nltk.corpus import stopwords
 from transformers import AutoTokenizer, AutoModelForSeq2SeqLM
+import pickle
+import joblib
+import numpy as np
 
 app = Flask(__name__)
 CORS(app)
@@ -185,5 +188,81 @@ def upload_file():
     main()
     return 'okay'
 
+# Define the prediction endpoint
+@app.route('/predict', methods=['POST'])
+def predict():
+    loaded_model = joblib.load("careerlast.pkl")
+
+    encoded_mapping = {
+        "Not Interested" : 1,
+        "Poor" : 2,
+        "Beginner" : 3,
+        "Average" : 5,
+        "Intermediate" : 6,
+        "Excellent" : 7,
+        "Professional" : 9
+    }
+    # Get data from the request
+    data = request.json
+    
+    # Convert encoded values to original categories
+    for key in data:
+        data[key] = encoded_mapping[data[key]]
+    
+    # Extracting features from the received data
+    print(data)
+    features = np.array([[
+        data['Database Fundamentals'],
+        data['Computer Architecture'],
+        data['Distributed Computing Systems'],
+        data['Cyber Security'],
+        data['Networking'],
+        data['Software Development'],
+        data['Programming Skills'],
+        data['Project Management'],
+        data['Computer Forensics Fundamentals'],
+        data['Technical Communication'],
+        data['AI ML'],
+        data['Software Engineering'],
+        data['Business Analysis'],
+        data['Communication skills'],
+        data['Data Science'],
+        data['Troubleshooting skills'],
+        data['Graphics Designing']
+    ]])
+    
+    # Make prediction
+    prediction = loaded_model.predict(features)
+    
+    # Map prediction to corresponding role
+    roles = {
+        0: 'AI ML Specialist',
+        1: 'API Integration Specialist',
+        2: 'Application Support Engineer',
+        3: 'Business Analyst',
+        4: 'Customer Service Executive',
+        5: 'Cyber Security Specialist',
+        6: 'Data Scientist',
+        7: 'Database Administrator',
+        8: 'Graphics Designer',
+        9: 'Hardware Engineer',
+        10: 'Helpdesk Engineer',
+        11: 'Information Security Specialist',
+        12: 'Networking Engineer',
+        13: 'Project Manager',
+        14: 'Software Developer',
+        15: 'Software Tester',
+        16: 'Technical Writer'
+    }
+    print(prediction[0])
+    predicted_role = prediction[0]
+    
+    # Prepare response
+    response = {
+        "prediction": predicted_role
+    }
+    
+    return jsonify(response)
+
 if __name__ == '__main__':
-    app.run(host='192.168.1.18', debug=False, port=5000)
+    app.run(host='192.168.1.9', debug=False, port=5000)

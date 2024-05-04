@@ -35,6 +35,8 @@ const quizdetailRoute=require ('./routes/dissemination')
 const displayQuizRoute=require('./routes/displayquiz')
 const quizScoreRoute=require('./routes/quizscore')
 const orderRoutes=require('./routes/orders')
+const supportRoute=require('./routes/support');
+const adminRoute = require('./routes/admin')
 // Database connection
 connection();
 
@@ -72,11 +74,13 @@ app.use("/api",quizdetailRoute);
 app.use("/api",quizScoreRoute);
 app.use("/api",displayQuizRoute);
 app.use("/api",orderRoutes);
+app.use('/api',supportRoute);
+app.use('/api',adminRoute);
 
 let users = [];
 
 io.on('connection', socket => {
-  console.log('User socket Connected', socket.id);
+ // console.log('User socket Connected', socket.id);
 
   socket.on('addUser', ({ senderId, receiverId }) => {
     const isSenderExist = users.find(user => user.userId === senderId);

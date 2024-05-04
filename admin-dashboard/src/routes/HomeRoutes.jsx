@@ -7,6 +7,8 @@ import OrderDetails from "../pages/OrderDetails";
 import PageNotFound from "../pages/PageNotFound";
 import AddInsurance from "../pages/AddInsurance";
 import ViewInsurance from "../pages/ViewInsurance";
+import SupportDetails from "../pages/SupportDetails";
+
 
 const HomeRoutes = () => {
   return (
@@ -19,6 +21,7 @@ const HomeRoutes = () => {
         <Route path="order-details" element={<OrderDetails />} />
         <Route path="add-insurance" element={<AddInsurance />} />
         <Route path="view-insurance" element={<ViewInsurance />} />
+        <Route path="support-section" element={<SupportDetails />} />
         <Route path="/*" element={<PageNotFound />} />
       </Routes>
     </>

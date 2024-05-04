@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
-import "tailwindcss/tailwind.css"; // Import Tailwind CSS styles
+
 
 const ModulePage = ({ courseId }) => {
   const [title, setTitle] = useState("");

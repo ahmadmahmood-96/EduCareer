@@ -13,7 +13,6 @@ import {
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
-const baseUrl = process.env.REACT_APP_BASE_URL;
 
 export default function Login() {
   const navigate = useNavigate();
@@ -27,30 +26,27 @@ export default function Login() {
 
   const onFinish = async (values) => {
     try {
-      const response = await axios.post(`${baseUrl}auth/login`, values);
+      const response = await axios.post(`http://localhost:8080/api/login-detail`, values);
       console.log(response.data);
-      if (response.status === 200 && response.data.role === "Admin") {
-        localStorage.setItem("token", response.data.token);
-        localStorage.setItem("role", response.data.role);
+      
+      if (response.status === 200) {
+        console.log("tokennn",response.data.data.token);
+        localStorage.setItem("token", response.data.data.token);
         message.success(response.data.message);
+        //console.log("token",localStorage.getItem());
         setEmail("");
         setPassword("");
-
-        // Navigate to the home page after successful login
         navigate("/home", { replace: true });
-      } else if (response.data.role !== "Admin") {
-        message.error(response.data.message);
       }
-    } catch (e) {
-      // Handle login errors
-      if (e.response && e.response.data && e.response.data.message) {
-        message.error(e.response.data.message);
-      } else if (!axios.isCancel(e)) {
-        message.error("Failed to log in. Please try again");
-      }
+    } catch (error) {
+      // Handle errors
+      if (error.response && error.response.data && error.response.data.message) {
+        // If there's a specific error message in the response, show it
+        message.error(error.response.data.message);
+      } 
     }
   };
-
+  
   const validateEmail = (rule, value) => {
     // Basic email validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -180,8 +176,8 @@ export default function Login() {
             level={2}
             style={{ fontWeight: "bold", textAlign: "center" }}
           >
-            Welcome to AutoAid Admin Dashboard
-          </Typography.Title>
+            Welcome to Admin Dashboard
+          </Typography.Title>9
         </Flex>
       </Col>
     </Row>

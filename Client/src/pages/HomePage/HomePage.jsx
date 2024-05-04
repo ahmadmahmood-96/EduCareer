@@ -7,6 +7,7 @@ import {
     Contact,
     Courses,
     Footer,
+    Support,
   } from "../../components/index";
 
 function HomePage() {
@@ -18,6 +19,7 @@ function HomePage() {
             <About />
             <Courses />
             <Teacher />
+            <Support/>
             <Contact />
             <Footer />
           </div>
