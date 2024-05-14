@@ -68,7 +68,7 @@ router.post("/api/Upload", upload.single("file"), async (req, res) => {
           res.status(500).send("Internal Server Error");
         }
       });
-      //to update first showit in the form...
+      //to update first show it in the form...
       router.get("/api/Viewdetail/:Id", async (req, res) => {
         try {
           
@@ -117,27 +117,6 @@ router.post("/api/Upload", upload.single("file"), async (req, res) => {
         }
       });
      
-      
-      // // next step to update
-      // router.put('/api/UpdateAssignment/:Id', upload.single('file'), async (req, res) => {
-      //   try {
-      //     const Id = req.params.Id;
-      //     const updatedAssignmentData = {
-      //       title: req.body.title,
-      //       description: req.body.description,
-      //       // Uncomment if you want to update the file
-      //       file: req.file ? req.file.filename : undefined,
-      //       dueDate: req.body.dueDate,
-      //     };
-      
-      //     const updatedAssignment = await AssModel.findByIdAndUpdate(Id, updatedAssignmentData, { new: true });
-      
-      //     res.status(200).json({ status: 'ok', data: updatedAssignment });
-      //   } catch (error) {
-      //     console.error("Server error:", error);
-      //     res.status(500).json({ status: 'error', message: 'Internal Server Error' });
-      //   }
-      // });
       router.delete('/api/deleteAss/:id', async (req, res) => {
         try {
           const id = req.params.id;

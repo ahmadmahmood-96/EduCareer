@@ -5,7 +5,8 @@ const { User } = require("../models/user");
 const multer = require('multer');
 const fs = require('fs');
 const SubmittedAssignmentModel = require('../models/SubmittedAssignment');
-const CoursesModel = require('../models/course');
+const CourseModel = require('../models/course')
+const {QuizScoreModel} = require('../models/quizscore');
 
 // Multer storage configuration
 const storage = multer.diskStorage({
@@ -23,8 +24,28 @@ const storage = multer.diskStorage({
 });
 
 const upload = multer({ storage: storage });
+//Assignment Grade..
 
+router.post('/submitted-assignments/grades', async (req, res) => {
+  //console.log("submit assignment demo demo");
+  const { grades } = req.body;
 
+  try {
+    // Loop through grades object and update each assignment
+    for (const assignmentId in grades) {
+      await SubmittedAssignmentModel.findByIdAndUpdate(
+        assignmentId,
+        { marks: grades[assignmentId] },
+        { new: true }
+      );
+    }
+
+    return res.status(200).json({ message: "Grades updated successfully" });
+  } catch (error) {
+    console.error("Error updating grades:", error);
+    return res.status(500).json({ error: "Internal server error" });
+  }
+});
 
 // Display assignments for enrolled courses
 router.get('/user/:userId/enrolled-assignments', async (req, res) => {
@@ -118,6 +139,59 @@ router.get('/submitted-assignments/:Id', async (req, res) => {
   } catch (error) {
     console.error('Error fetching submitted assignments:', error);
     res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+
+
+
+
+
+// Route to calculate average assignment marks for a specific user and course
+router.get('/calculate-average-assignment-marks/:userId/:courseId', async (req, res) => {
+  try {
+    const { userId, courseId } = req.params;
+    const assignments = await SubmittedAssignmentModel.find({ userId, courseId });
+    const totalAssignmentMarks = assignments.reduce((acc, assignment) => acc + assignment.marks, 0);
+    const totalAssignmentsCompleted = assignments.length;
+    const avgAssignmentMarks = totalAssignmentsCompleted > 0 ? totalAssignmentMarks / totalAssignmentsCompleted : 0;
+    res.json({ avgAssignmentMarks });
+    console.log(avgAssignmentMarks);
+  } catch (error) {
+    console.error('Error calculating average assignment marks:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+router.get('/calculate-average-quiz-marks/:userId/:courseId', async (req, res) => {
+  try {
+    const { userId, courseId } = req.params;
+    const quizzes = await QuizScoreModel.find({ userId, courseId });
+    const totalQuizMarks = quizzes.reduce((acc, quiz) => acc + parseInt(quiz.score), 0); // Assuming score is a string
+    const totalQuizzesCompleted = quizzes.length;
+    const avgQuizMarks = totalQuizzesCompleted > 0 ? totalQuizMarks / totalQuizzesCompleted : 0;
+    res.json({ avgQuizMarks });
+    console.log(avgQuizMarks);
+  } catch (error) {
+    console.error('Error calculating average quiz marks:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+// Route to fetch course completion criteria for a specific course
+router.get('/courses/:courseId/completion-criteria', async (req, res) => {
+  try {
+    const { courseId } = req.params;
+    const course = await CourseModel.findById(courseId);
+    if (!course) {
+      return res.status(404).json({ error: 'Course not found' });
+    }
+    const completionCriteria = course.criteria; // Assuming completion criteria is in percentage
+    res.json({ completionCriteria });
+    console.log(completionCriteria);
+  } catch (error) {
+    console.error('Error fetching course completion criteria:', error);
+    res.status(500).json({ error: 'Internal server error' });
   }
 });
 

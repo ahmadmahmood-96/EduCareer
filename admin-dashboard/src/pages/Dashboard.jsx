@@ -8,91 +8,103 @@ const baseUrl = process.env.REACT_APP_BASE_URL;
 const formatter = (value) => <CountUp end={value} separator="," />;
 
 export default function Dashboard() {
-  const [totalVehicleOwners, setTotalVehicleOwners] = useState(0);
-  const [totalServiceProviders, setTotalServiceProviders] = useState(0);
-  const [totalWorkshopOwners, setTotalWorkshopOwners] = useState(0);
-  const [totalProducts, setTotalProducts] = useState(0);
-  const [totalOrders, setTotalOrders] = useState(0);
-  const [totalDispatchedOrders, setTotalDispatchedOrders] = useState(0);
-  const [totalDeliveredOrders, setTotalDeliveredOrders] = useState(0);
+  const [totalNumberofUsers, setTotalNumberofUsers] = useState(0);
+  const [totalNumberofInstructors, setTotalNumberofInstructor] = useState(0);
+  const [totalNumberofStudents, setTotalNumberofStudents] = useState(0);
+  const [totalNumberofFreeCourses, setTotalNumberofFreeCourses] = useState(0);
+  const [totalNumberofPaidCourses, setTotalNumberofPaidCourses] = useState(0);
+  const [totalNumberOfEnrollementsInPaidCourses, setTotalNumberOfEnrollementsInPaidCourses] = useState(0);
+  const [totalNumberOfEnrollementsInFreeCourses, setTotalNumberOfEnrollementsInFreeCourses] = useState(0);
+  const [totalNumberofPurchases, setTotalNumberofPurchases] = useState(0);
 
   useEffect(() => {
     axios
-      .get(`${baseUrl}admin/total-vehicle-owners`, {
+      .get('http://localhost:8080/api/totalUsers', {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       })
       .then((response) => {
-        setTotalVehicleOwners(response.data.totalVehicleOwners);
+        setTotalNumberofUsers(response.data.totalUsers);
+      })
+      .catch((error) => {
+        message.error("Error fetching total users:", error);
+      });
+
+    axios
+      .get(`http://localhost:8080/api/totalNumberOfInstructors`, {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      })
+      .then((response) => {
+        setTotalNumberofInstructor(response.data.totalNumberOfInstructors);
       })
       .catch((error) => {
         message.error("Error fetching records:", error);
       });
 
     axios
-      .get(`${baseUrl}admin/total-service-providers`, {
+      .get(`http://localhost:8080/api/totalNumberOfStudents`, {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       })
       .then((response) => {
-        setTotalServiceProviders(response.data.totalServiceProviders);
+        setTotalNumberofStudents(response.data.totalNumberOfStudents);
       })
       .catch((error) => {
         message.error("Error fetching records:", error);
       });
 
     axios
-      .get(`${baseUrl}admin/total-workshop-owners`, {
+      .get(`http://localhost:8080/api/totalNumberOfFreeCourses`, {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       })
       .then((response) => {
-        setTotalWorkshopOwners(response.data.totalWorkshopOwners);
+        setTotalNumberofFreeCourses(response.data.totalNumberOfFreeCourses);
       })
       .catch((error) => {
         message.error("Error fetching records:", error);
       });
 
     axios
-      .get(`${baseUrl}admin/total-products`, {
+      .get(`http://localhost:8080/api/totalNumberOfPaidCourses`, {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       })
       .then((response) => {
-        setTotalProducts(response.data.totalProducts);
+        setTotalNumberofPaidCourses(response.data.totalNumberOfPaidCourses);
       })
       .catch((error) => {
         message.error("Error fetching records:", error);
       });
 
     axios
-      .get(`${baseUrl}admin/total-orders`, {
+      .get(`http://localhost:8080/api/totalNumberOfEnrollementsInPaidCourses`, {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       })
       .then((response) => {
-        setTotalOrders(response.data.totalOrders);
+        setTotalNumberOfEnrollementsInPaidCourses(response.data.totalNumberOfEnrollementsInPaidCourses);
       })
       .catch((error) => {
         message.error("Error fetching records:", error);
       });
 
-    axios
-      .get(`${baseUrl}admin/total-dispatched-orders`, {
+      axios
+      .get(`http://localhost:8080/api/totalNumberOfEnrollementsInFreeCourses`, {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       })
       .then((response) => {
-        setTotalDispatchedOrders(response.data.totalDispatchedOrders);
+        setTotalNumberOfEnrollementsInFreeCourses(response.data.totalNumberOfEnrollementsInFreeCourses);
       })
       .catch((error) => {
         message.error("Error fetching records:", error);
       });
 
-    axios
-      .get(`${baseUrl}admin/total-delivered-orders`, {
-        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-      })
-      .then((response) => {
-        setTotalDeliveredOrders(response.data.totalDeliveredOrders);
-      })
-      .catch((error) => {
-        message.error("Error fetching records:", error);
-      });
+    // axios
+    //   .get(`${baseUrl}admin/total-delivered-orders`, {
+    //     headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+    //   })
+    //   .then((response) => {
+    //     setTotalNumberofPurchases(response.data.totalDeliveredOrders);
+    //   })
+    //   .catch((error) => {
+    //     message.error("Error fetching records:", error);
+    //   });
   }, []);
   return (
     <>
@@ -101,8 +113,8 @@ export default function Dashboard() {
         <Col span={6} xxl={6} xl={6} lg={6} md={6} sm={12} xs={24}>
           <Card bordered={false}>
             <Statistic
-              title="Number of Vehicle Owners"
-              value={totalVehicleOwners}
+              title="Total Number of Users"
+              value={totalNumberofUsers}
               valueStyle={styles}
               formatter={formatter}
             />
@@ -111,8 +123,8 @@ export default function Dashboard() {
         <Col span={6} xxl={6} xl={6} lg={6} md={6} sm={12} xs={24}>
           <Card bordered={false}>
             <Statistic
-              title="Number of Service Providers"
-              value={totalServiceProviders}
+              title="Number of Instructors"
+              value={totalNumberofInstructors}
               valueStyle={styles}
               formatter={formatter}
             />
@@ -121,8 +133,8 @@ export default function Dashboard() {
         <Col span={6} xxl={6} xl={6} lg={6} md={6} sm={12} xs={24}>
           <Card bordered={false}>
             <Statistic
-              title="Number of Workshop Owners"
-              value={totalWorkshopOwners}
+              title="Number of Students"
+              value={totalNumberofStudents}
               valueStyle={styles}
               formatter={formatter}
             />
@@ -131,8 +143,8 @@ export default function Dashboard() {
         <Col span={6} xxl={6} xl={6} lg={6} md={6} sm={12} xs={24}>
           <Card bordered={false}>
             <Statistic
-              title="Number of Products"
-              value={totalProducts}
+              title="Number of Free Courses"
+              value={totalNumberofFreeCourses}
               valueStyle={styles}
               formatter={formatter}
             />
@@ -141,8 +153,8 @@ export default function Dashboard() {
         <Col span={6} xxl={6} xl={6} lg={6} md={6} sm={12} xs={24}>
           <Card bordered={false}>
             <Statistic
-              title="Total Number of Orders"
-              value={totalOrders}
+              title="Number of Paid Courses"
+              value={totalNumberofPaidCourses}
               valueStyle={styles}
               formatter={formatter}
             />
@@ -151,8 +163,8 @@ export default function Dashboard() {
         <Col span={6} xxl={6} xl={6} lg={6} md={6} sm={12} xs={24}>
           <Card bordered={false}>
             <Statistic
-              title="Orders Dispatched"
-              value={totalDispatchedOrders}
+              title="Number of Enrollements in Paid Courses"
+              value={totalNumberOfEnrollementsInPaidCourses}
               valueStyle={styles}
               formatter={formatter}
             />
@@ -161,13 +173,23 @@ export default function Dashboard() {
         <Col span={6} xxl={6} xl={6} lg={6} md={6} sm={12} xs={24}>
           <Card bordered={false}>
             <Statistic
-              title="Orders Delivered"
-              value={totalDeliveredOrders}
+              title="Number of Enrollements in Free Courses"
+              value={totalNumberOfEnrollementsInFreeCourses}
               valueStyle={styles}
               formatter={formatter}
             />
           </Card>
         </Col>
+        {/* <Col span={6} xxl={6} xl={6} lg={6} md={6} sm={12} xs={24}>
+          <Card bordered={false}>
+            <Statistic
+              title="Number of Purchases"
+              value={totalNumberofPurchases}
+              valueStyle={styles}
+              formatter={formatter}
+            />
+          </Card>
+        </Col> */}
       </Row>
     </>
   );

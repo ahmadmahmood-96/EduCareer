@@ -2,15 +2,13 @@ import React, { useState, useEffect } from "react";
 import { Table, Typography, Tag } from "antd";
 import axios from "axios";
 
-const baseUrl = process.env.REACT_APP_BASE_URL;
-
 export default function OrderDetails() {
   const [orders, setOrders] = useState([]);
   const [sortedInfo, setSortedInfo] = useState({});
 
   useEffect(() => {
     axios
-      .get(`${baseUrl}admin/get-orders`, {
+      .get('http://localhost:8080/api/allOrders', {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       })
       .then((response) => {
@@ -21,88 +19,86 @@ export default function OrderDetails() {
       });
   }, []);
 
-  const renderStatusTag = (status) => {
-    const verb = status.split(" ")[1]; // Extract the verb from the status string
-    let color = "";
-    switch (verb) {
-      case "Delivered":
-        color = "green";
-        break;
-      case "Dispatched":
-        color = "blue";
-        break;
-      case "Placed":
-        color = "red";
-        break;
-      default:
-        color = "default";
-        break;
-    }
-    return (
-      <Tag color={color} style={{ fontSize: 14 }}>
-        {verb}
-      </Tag>
-    );
-  };
+ 
 
   const columns = [
     {
       key: 1,
       title: "Name",
       render: (_, record) => {
-        return record.user ? record.shippingAddress.name : "N/A";
+        if(record.userName){
+          return record.userName;
+        }
+        else{
+          return "N/A";
+        }
+
+        
       },
     },
     {
       key: 2,
-      title: "Phone Number",
+      title: "Email",
       render: (_, record) => {
-        return record.shippingAddress
-          ? record.shippingAddress.phoneNumber
-          : "N/A";
+        if(record.userEmail){
+          return record.userEmail;
+        }
+        else{
+          return "N/A";
+        }
       },
     },
+    // {
+    //   key: 3,
+    //   title: "Order ID",
+    //   render: (_, record) => {
+    //     if (record._id) {
+    //       return record._id;
+    //     } else {
+    //       return "N/A";
+    //     }
+    //   },
+    // },
     {
-      key: 3,
-      title: "Address",
+      key: 4,
+      title: "Summary",
       render: (_, record) => {
-        if (record.shippingAddress) {
-          const { houseNo, street, town } = record.shippingAddress;
-          return `${houseNo}, ${street}, ${town}`;
+        if (record.courseNames) {
+          return record.courseNames;
         } else {
           return "N/A";
         }
       },
     },
     {
-      key: 4,
-      title: "Total Price",
-      dataIndex: "totalPrice",
-      sorter: (a, b) => a.totalPrice - b.totalPrice,
-    },
-    {
       key: 5,
-      title: "Order Placed Date",
-      dataIndex: "createdAt",
-      render: (createdAt) => {
-        const date = new Date(createdAt);
-        return date.toLocaleString(); // Convert date to a human-readable format
-      },
-      sorter: (a, b) => new Date(a.createdAt) - new Date(b.createdAt),
+      title: "Total Price",
+      dataIndex: "subtotal",
+      sorter: (a, b) => a.subtotal- b.subtotal,
     },
-
     {
       key: 6,
-      title: "Status",
-      dataIndex: "status",
-      filters: [
-        { text: "Order Placed", value: "Order Placed" },
-        { text: "Order Dispatched", value: "Order Dispatched" },
-        { text: "Order Delivered", value: "Order Delivered" },
-      ],
-      onFilter: (value, record) => record.status === value,
-      render: renderStatusTag,
+      title: "Order Placed Date",
+      dataIndex: "orderDate",
+      render: (orderDate) => {
+        const date = new Date(orderDate);
+        return date.toLocaleString(); // Convert date to a human-readable format
+      },
+      sorter: (a, b) => new Date(a.orderDate) - new Date(b.orderDate),
     },
+
+    // {
+    //   key: 7,
+    //   title: "Status",
+    //   dataIndex: "payment_status",
+    //   // filters: [
+    //   //   { text: "Order Placed", value: "Order Placed" },
+    //   //   { text: "Order Dispatched", value: "Order Dispatched" },
+    //   //   { text: "Order Delivered", value: "Order Delivered" },
+    //   // ],
+    //   // onFilter: (value, record) => record.status === value,
+    //   // render: renderStatusTag,
+    // },
   ];
 
   const handleTableChange = (pagination, filters, sorter) => {

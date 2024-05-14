@@ -1,13 +1,10 @@
 import { Routes, Route } from "react-router-dom";
 import Dashboard from "../pages/Dashboard";
-import AddProduct from "../pages/AddProduct";
-import ViewProduct from "../pages/ViewProduct";
 import UserDetails from "../pages/UserDetails";
 import OrderDetails from "../pages/OrderDetails";
 import PageNotFound from "../pages/PageNotFound";
-import AddInsurance from "../pages/AddInsurance";
-import ViewInsurance from "../pages/ViewInsurance";
 import SupportDetails from "../pages/SupportDetails";
+import CourseDetails from "../pages/CourseDetails"
 
 
 const HomeRoutes = () => {
@@ -15,13 +12,10 @@ const HomeRoutes = () => {
     <>
       <Routes>
         <Route path="/" index element={<Dashboard />} />
-        <Route path="add-product" element={<AddProduct />} />
-        <Route path="view-product" element={<ViewProduct />} />
         <Route path="user-details" element={<UserDetails />} />
         <Route path="order-details" element={<OrderDetails />} />
-        <Route path="add-insurance" element={<AddInsurance />} />
-        <Route path="view-insurance" element={<ViewInsurance />} />
         <Route path="support-section" element={<SupportDetails />} />
+        <Route path="course-details" element={<CourseDetails />} />
         <Route path="/*" element={<PageNotFound />} />
       </Routes>
     </>

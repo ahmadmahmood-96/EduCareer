@@ -2,18 +2,29 @@ import React, { useEffect, useState } from "react";
 import { Image, Space, Typography, Tooltip } from "antd";
 import { MenuUnfoldOutlined, MenuFoldOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
-import { decodeToken } from "../utils/jwtUtils";
+import axios from "axios";
+
 
 const HeaderComponent = ({ collapsed, handleToggle }) => {
   const [name, setName] = useState("");
   const navigate = useNavigate();
 
   useEffect(() => {
+    const fetchUserName = async () => {
+      try {
+        const userId = localStorage.getItem("token"); 
+        const response = await axios.get(`http://localhost:8080/api/admin/${userId}`);
+        const fullName  = response.data;
+        setName(fullName);
+      } catch (error) {
+        console.error("Error fetching user name:", error);
+      }
+    };
+
     if (localStorage.getItem("token")) {
-      const { name } = localStorage.getItem("token");
-      setName(name);
+      fetchUserName();
     }
-  }, [name, navigate]);
+  }, [navigate]);
 
   return (
     <header style={headerStyle}>
@@ -31,9 +42,13 @@ const HeaderComponent = ({ collapsed, handleToggle }) => {
             />
           )}
         </Tooltip>
-        <Typography.Text
-        style={{ fontSize: 17, fontWeight: "normal", color: "#fbfbfb" }}>EduCareer Dashboard</Typography.Text>
 
+        <Typography.Text
+          style={{ fontSize: 17, fontWeight: "bold", color: "#fbfbfb" }}
+        >
+          EduCareer
+        </Typography.Text>
+       
       </Space>
       <Space size="large">
         <Typography.Text
@@ -49,7 +64,7 @@ const HeaderComponent = ({ collapsed, handleToggle }) => {
 const headerStyle = {
   color: "#fff",
   height: 55,
-  backgroundColor: "#164863",
+  backgroundColor: "#2F6C6D",
   display: "flex",
   alignItems: "center",
   justifyContent: "space-between",

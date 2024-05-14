@@ -7,6 +7,7 @@ import {
   FaRegCalendarCheck, // Changed from FaCalendarAlt
   FaQuestionCircle,
   FaShare,
+  FaCheckCircle, // Import FaCheckCircle for the completion icon
 } from "react-icons/fa"; // Import FaCalendarAlt for the schedule icon
 import { MdAccountCircle } from "react-icons/md";
 import { ChevronLast, ChevronFirst } from "lucide-react";
@@ -20,11 +21,13 @@ const Sidebar = ({
   handleEnrolledStudentsClick,
   handleQuizClick,
   handleDisseminate,
+  handleCompletion,
   courseTitle,
   children,
 }) => {
   const [expanded, setExpanded] = useState(true);
   const [userInfo, setUserInfo] = useState(null);
+  const [isCompleted, setIsCompleted] = useState(false); // State for course completion status
 
   const handleAssignmentClick = () => {
     setShowAssignment((prevShowAssignment) => !prevShowAssignment);
@@ -56,6 +59,11 @@ const Sidebar = ({
   const handleDisseminateQuiz = () => {
     console.log("am Clicked");
     handleDisseminate(true);
+  };
+
+  const handleCompletionClick = () => {
+    setIsCompleted(true); // Update completion status
+    handleCompletion(); // Call the completion handler function
   };
 
   return (
@@ -128,6 +136,18 @@ const Sidebar = ({
                   >
                     <FaShare className="mr-2" /> Disseminate Quiz
                   </button>
+
+                  
+                  {isCompleted ? (
+                    <FaCheckCircle className="mb-4 flex items-center text-white hover:bg-gray-700 rounded px-2" />
+                  ) : (
+                    <button
+                      onClick={handleCompletionClick}
+                      className="mb-4 flex items-center text-white hover:bg-gray-700 rounded px-2"
+                    >
+                      <FaCheckCircle className="mr-2" /> Course Completion
+                    </button>
+                  )}
                 </>
               )}
               {children}

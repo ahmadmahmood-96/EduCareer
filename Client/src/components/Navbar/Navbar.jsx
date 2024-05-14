@@ -52,7 +52,17 @@ const Navbar = () => {
             <div className=" px-32 text-xl text-white uppercase tracking-wide">
              EduCareer
             </div>
+
+
           </div>
+
+          <button
+          className="text-lg text-white uppercase"
+          onClick={() => navigate("/career-recommendation")}
+        >
+          Career
+        </button>
+
           <div className="sm:flex items-center hidden  text-lg text-white uppercase tracking-wide">
             {navLinks.map((navLink) => {
               return <NavLink key={navLink.id} {...navLink} />;

@@ -1,14 +1,17 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from 'axios';
 import { motion } from "framer-motion";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+// import { FolderViewOutlined } from "@ant-design/icons";
+// import { Tooltip } from "antd";
 
 const Support = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [subject, setSubject] = useState("");
   const [description, setDescription] = useState("");
   const [file, setFile] = useState(null);
+  const [hasRecords, setHasRecords] = useState(false); // State to track if user has records
   const container = {
     hidden: {
       opacity: 0,
@@ -24,22 +27,42 @@ const Support = () => {
     },
   };
 
+  useEffect(() => {
+    // Fetch data related to the user from the database
+    const fetchData = async () => {
+      const userToken = localStorage.getItem("token");
+      try {
+        const response = await axios.get(`http://localhost:8080/api/support-details/${userToken}`);
+        // Check if there are records for the user
+        setHasRecords(response.data.length > 0);
+      } catch (error) {
+        console.error("Error fetching records:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  const ViewAdminResponse = () => {
+    console.log("demoooo ddemoooooooooo");
+  };
+
   const toggleModal = () => {
     setIsModalOpen(!isModalOpen);
   };
+
   const handleFileChange = (e) => {
     setFile(e.target.files[0]);
   };
+
   const submitData = async (e) => {
     e.preventDefault();
     const userToken = localStorage.getItem("token");
-    console.log(userToken);
     const formData = {
       subject,
       description,
       file
     };
-    console.log(formData);
     const headers = {
       Authorization: `Bearer ${userToken}`,
       "Content-Type": "multipart/form-data",
@@ -47,15 +70,14 @@ const Support = () => {
     try {
       const result = await axios.post(`http://localhost:8080/api/support/${userToken}`, formData, { headers });
       toggleModal();
-      toast.success("Support request submitted successfully!"); // Trigger success toast
+      toast.success("Support request submitted successfully!");
       console.log(result);
     } catch (error) {
       console.error("axios error:", error);
-      toast.error("Failed to submit support request."); // Trigger error toast
+      toast.error("Failed to submit support request.");
     }
   };
-
-  return (
+   return (
     <div className="section" id="support">
       <div className="text-center relative">
         <div className="sm:text-3xl text-2xl font-bold mb-5">
@@ -63,8 +85,8 @@ const Support = () => {
         </div>
         <p className="text-sm text-gray leading-7 max-w-[700px] mx-auto">
           Explore our website's dedicated support system, designed to assist users, whether you're a teacher or a student.
-           From resolving technical glitches to offering educational materials, we're committed to ensuring a seamless 
-           and enriching experience for all our customers.
+          From resolving technical glitches to offering educational materials, we're committed to ensuring a seamless 
+          and enriching experience for all our customers.
         </p>
         <button onClick={toggleModal} className="text-sm mt-5 text-white bg-Teal sm:p-3 p-2 shadow-md font-bold">
           Help Center
@@ -79,7 +101,6 @@ const Support = () => {
               aria-hidden="true"
               className={`overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 flex justify-center items-center h-screen w-full`}
             >
-              {/* Modal content */}
               <div className="relative p-4 w-full max-w-md max-h-full">
                 <div className="relative bg-white rounded-lg shadow dark:bg-gray-700">
                   <div className="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
@@ -118,10 +139,23 @@ const Support = () => {
                         <input type="file" id="attachment" name="attachment" onChange={handleFileChange} className="bg-gray-50 border border-gray-300 text-gray-900 focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" />
 
                       </div>
+                      
                     </div>
-                    <button type="submit" className="text-sm mt-5 text-white bg-Teal sm:p-3 p-2 shadow-md font-bold dark:focus:ring-Teal-800">
-                      Submit
-                    </button>
+                    <div className="flex items-center justify-between">
+                      
+                      {hasRecords &&
+                        (
+                       
+                        <div>
+                          <a href="/admin-response" className="text-teal-900 mt-10 dark:text-white pl-5 cursor-pointer">
+                            Click to View admin's response
+                          </a>
+                        </div>
+                      )}
+                      <button type="submit" className="text-sm mt-5 text-white bg-Teal sm:p-3 p-2 shadow-md font-bold dark:focus:ring-Teal-800">
+                        Submit
+                      </button>
+                    </div>
                   </form>
                 </div>
               </div>

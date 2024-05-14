@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { Modal, Table, Tooltip, Typography, message, Tag } from "antd";
 
 const Orders = () => {
   const [orders, setOrders] = useState([]);
@@ -18,44 +19,50 @@ const Orders = () => {
     fetchOrders();
   }, [orders]);
 
-  return (
-    <div className="m-2">
-      <div className="text-3xl">Your Orders</div>
-      <table className="mt-5 min-w-full bg-white border border-gray-300">
-        <thead>
-          <tr className="bg-Teal text-white">
-            <th className="py-2 px-4 border-b">Order ID</th>
-            <th className="py-2 px-4 border-b">Total Amount</th>
-            <th className="py-2 px-4 border-b">Status</th>
-            <th className="py-2 px-4 border-b">Summary</th>
-            {/* Add more table headers if needed */}
-          </tr>
-        </thead>
-        <tbody>
-          {orders.map(order => (
-            <tr key={order._id}>
-              <td className="py-2 px-4 border-b border-r">{order._id}</td>
-              <td className="py-2 px-4 border-b border-r">Rs. {order.subtotal}</td>
-              <td className="py-2 px-4 border-b border-r">{order.payment_status}</td>
-              <td className="py-2 px-4 border-b border-r">
-              <table>
-                
-                  <tbody>
-                    {order.courses.map(course => (
-                      <tr key={course.courseId}>
-                        <td className='py-2 px-4'>{course.title}</td>
-                        {/* <td>Price: Rs.{course.price}</td> */}
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
+  const columns = [
+    {
+      key: 1,
+      title: "Order ID",
+      dataIndex: "_id",
+      width:350,
 
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
+    },
+    {
+      key: 2,
+      title: "Total Amount",
+      dataIndex: "subtotal",
+      width:350,
+    },
+    {
+      key: 3,
+      title: "Status",
+      dataIndex: "payment_status",
+      width:350,
+    },
+
+    {
+      key: 4,
+      title: "Courses",
+      width:350,
+      render: (_, record) => {
+        if (record.summary) {
+          return record.summary;
+        } else {
+          const courseNames = record.courses.map(course => course.title).join(', ');
+          return courseNames || "N/A";
+        }
+      },
+    },
+
+   
+
+  ];
+
+  return (
+    <div className='min-w-100'>
+      <Typography.Title level={2}>Orders</Typography.Title>
+      <Table columns={columns} dataSource={orders} />
+      </div>
   );
 };
 

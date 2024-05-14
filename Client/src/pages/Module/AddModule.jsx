@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
+import { Form, Input, Button, message, Typography } from "antd";
 import axios from "axios";
+import { UploadOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 
-
 const ModulePage = ({ courseId }) => {
+  const [form] = Form.useForm();
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [file, setFile] = useState(null);
@@ -26,13 +28,12 @@ const ModulePage = ({ courseId }) => {
     viewFile();
   }, []);
 
-  const submitFile = async (e) => {
-    e.preventDefault();
+  const onFinish = async (values) => {
     const formData = new FormData();
     formData.append("courseId", courseId);
-    formData.append("title", title);
+    formData.append("title", values.title);
     formData.append("file", file);
-    formData.append("description", description);
+    formData.append("description", values.description);
 
     try {
       const result = await axios.post(
@@ -46,7 +47,7 @@ const ModulePage = ({ courseId }) => {
       );
 
       console.log("sent data", result);
-      alert("Module added to course")
+      alert("Module added to course");
 
       // Update the module state after submission
       viewFile();
@@ -63,96 +64,99 @@ const ModulePage = ({ courseId }) => {
       "noreferrer"
     );
   };
+  
   const deleteModule = async (moduleId) => {
     const confirmDeletion = window.confirm('Are you sure you want to delete this module?');
     // Proceed with deletion if the module exists
     if (confirmDeletion) {
-    const result = await axios.delete(
-      `http://localhost:8080/api/DeleteModule/${moduleId}`
-    );
+      const result = await axios.delete(
+        `http://localhost:8080/api/DeleteModule/${moduleId}`
+      );
 
-    console.log("Deleted module:", result.data.message);
+      console.log("Deleted module:", result.data.message);
 
-    // Update the module state after deletion
-    viewFile();
+      // Update the module state after deletion
+      viewFile();
+    }
   };
 
-}
-
   return (
-    <div className="module-container bg-white  mx-auto p-4 md:p-8">
-      <form
+    <div style={{ margin: "0 auto", maxWidth: 800 }}>
+    <div className="module-container bg-white mx-auto p-4 md:p-8">
+      <Form
+        form={form}
         encType="multipart/form-data"
         className="form-style"
-        onSubmit={submitFile}
+        onFinish={onFinish}
+        labelCol={{ span: 4 }}
+        wrapperCol={{ span: 10 }}
       >
-        <h4 className="text-2xl font-bold mb-4">Add Module</h4>
-        <input
-          type="text"
-          className="form-control mb-2 p-2 border  w-full"
-          placeholder="Title"
-          onChange={(e) => setTitle(e.target.value)}
-          required
-        />
-        <input
-          type="file"
-          className="form-control mb-2 p-2 border w-full"
-          accept="*/*"
-          onChange={(e) => setFile(e.target.files[0])}
-          required
-        />
-        <label
-          htmlFor="description"
-          className="block text-sm font-medium text-gray-700 mb-2"
+        <Typography.Title level={2}>Add Module</Typography.Title>
+        <Form.Item
+          label="Title"
+          name="title"
+          rules={[{ required: true, message: "Please enter the module title!" }]}
         >
-          Description:
-        </label>
-        <textarea
-          className="form-control mb-2 p-2 border w-full"
-          placeholder="Enter a description"
-          rows="3"
-          onChange={(e) => setDescription(e.target.value)}
-        ></textarea>
-        <button
-          className="bg-Teal text-white mt-2 px-4 py-2  hover:bg-teal-600 focus:outline-none"
-          type="submit"
+          <Input placeholder="Enter Module Title" onChange={(e) => setTitle(e.target.value)} />
+        </Form.Item>
+
+        <Form.Item
+          label="File"
+          name="file"
+          rules={[{ required: true, message: "Please select a file!" }]}
         >
-          Submit
-        </button>
-      </form>
+          <Input type="file" onChange={(e) => setFile(e.target.files[0])} />
+        </Form.Item>
+
+        <Form.Item
+          label="Description"
+          name="description"
+          rules={[{ required: true, message: "Please enter the module description!" }]}
+        >
+          <Input.TextArea placeholder="Enter Module Description" onChange={(e) => setDescription(e.target.value)} />
+        </Form.Item>
+
+        <Form.Item wrapperCol={{ offset: 4, span: 10 }}>
+          <Button type="primary" htmlType="submit">
+            Submit
+          </Button>
+        </Form.Item>
+      </Form>
+
       <div className="uploaded mt-8">
-        <h4 className="text-2xl font-bold mb-4">Uploaded Content</h4>
+        <Typography.Title level={2}>Uploaded Content</Typography.Title>
         {Array.isArray(module) && module.length > 0 ? (
           module.map((data) => (
             <div key={data.title} className="module-item border p-4 mb-4">
-              <h6 className="text-xl font-semibold mb-2">
-                Title: {data.title}
-              </h6>
-              <p className="mb-2">Description: {data.description}</p>
-              <button
-                className="bg-Teal text-white mt-2 mx-3 px-4 py-2  hover:bg-teal-600 focus:outline-none"
+              <Typography.Title level={4}>Title: {data.title}</Typography.Title>
+              <Typography.Paragraph>Description: {data.description}</Typography.Paragraph>
+              <Button
+                type="primary"
+                className="mt-2"
                 onClick={() => showAssFiles(data.file)}
               >
                 Show Content
-              </button>
+              </Button>
               <Link
                 to={`/UpdateModule/${data._id}`}
-                className="bg-white text-Teal mt-2 mx-3 px-4 py-2  hover:bg-teal-600 focus:outline-none"
+                className="text-blue-600 ml-2 hover:underline mt-2"
               >
                 Update
               </Link>
-              <button
-                className="bg-red-500 text-white mt-2 mx-3 px-4 py-2  hover:bg-red-600 focus:outline-none"
+              <Button
+                danger
+                className="ml-2 mt-2"
                 onClick={(e) => deleteModule(data._id)}
               >
                 Delete
-              </button>
+              </Button>
             </div>
           ))
         ) : (
           <p>No content available.</p>
         )}
       </div>
+    </div>
     </div>
   );
 };

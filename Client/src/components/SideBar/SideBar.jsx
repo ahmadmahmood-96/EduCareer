@@ -85,7 +85,7 @@ export function SidebarItem({ icon, text, to }) {
           relative flex items-center py-2 px-3 my-1
           font-medium rounded-md cursor-pointer
           transition-colors group
-          hover:bg-white opacity-0.2 text-gray-600
+          hover:bg-teal-500 opacity-0.2 text-gray-600
         `}
       >
         <Link to={to} className=" flex items-center"     style={{ color: 'white', textDecoration: 'none' }}>

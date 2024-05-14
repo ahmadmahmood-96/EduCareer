@@ -5,7 +5,8 @@ const supportSchema = new mongoose.Schema({
   userId: { 
     type: mongoose.Schema.Types.ObjectId,
      ref: 'user', 
-     required: true },
+     required: true 
+  },
   subject: {
     type: String,
     required: true
@@ -17,12 +18,13 @@ const supportSchema = new mongoose.Schema({
   attachment: {
     type: String, 
     required: false
+  },
+  response: {
+    type: String, 
+    required: false 
   }
 });
+
 const SupportModel = mongoose.model('supports', supportSchema);
 
 module.exports = SupportModel;
-
-
-
-

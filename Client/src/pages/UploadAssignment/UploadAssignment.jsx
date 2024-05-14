@@ -1,12 +1,17 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { Modal, Table, Tooltip, Typography, message, Tag, Upload, Form, Button } from "antd";
+import {UploadOutlined, FileOutlined } from "@ant-design/icons";
+import { FileInput } from "lucide-react";
 
 
 const UploadAssignment = () => {
   const [assignments, setAssignments] = useState([]);
   const [fileInputs, setFileInputs] = useState({}); 
-  const [courses, setCourses] = useState([]);
-  const [selectedCourse, setSelectedCourse] = useState(null);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [record, setRecord] = useState(null);
+  const [filename, setFileName]  = useState('');
+ 
   
 
 
@@ -16,6 +21,7 @@ const UploadAssignment = () => {
     axios.get(`http://localhost:8080/api/user/${userToken}/enrolled-assignments`)
       .then((response) => {
         setAssignments(response.data);
+        console.log(assignments[0].title)
       })
       .catch((error) => {
         console.error('Error fetching assignments:', error);
@@ -30,11 +36,15 @@ const UploadAssignment = () => {
       initialFileInputs[assignment._id] = null;
     });
     setFileInputs(initialFileInputs);
+    console.log(fileInputs);
   }, [assignments]); // Run this effect when assignments change
 
   
   const handleFileInputChange = (assignmentId, event) => {
     const selectedFile = event.target.files[0];
+    console.log(selectedFile.name);
+    setFileName(selectedFile.name)
+
     setFileInputs((prevFileInputs) => ({
       ...prevFileInputs,
       [assignmentId]: selectedFile,
@@ -49,14 +59,20 @@ const UploadAssignment = () => {
     return currentDateTime > assignmentDueDate;
   };
 
+  const customRequest = ({ file, onSuccess, onError }) => {
+    onSuccess();
+    console.log(file)
+  };
+
   const handleSubmit = (assignmentId) => {
+    console.log(assignmentId);
     const userToken = localStorage.getItem("token");
     const formData = new FormData();
     formData.append("userId", userToken);
     formData.append("courseId", assignments.find((a) => a._id === assignmentId).courseId._id);
     formData.append("assignmentId", assignmentId);
     formData.append("subfile", fileInputs[assignmentId]);
-    formData.append("fileName", fileInputs[assignmentId].name);
+    formData.append("fileName", filename);
 
     axios
       .post("http://localhost:8080/api/submitassignment", formData)
@@ -71,54 +87,109 @@ const UploadAssignment = () => {
   };
 
 
+  const columns = [
+    {
+      key: 1,
+      title: "Title",
+      // dataIndex: "firstName",
+      dataIndex: "title",
+    },
+    {
+      key: 2,
+      title: "Description",
+      dataIndex: "description",
+    },
+    {
+      key: 3,
+      title: "Due Date",
+      dataIndex: "dueDate",
+      render: (dueDate) => {
+        const formattedDate = new Date(dueDate).toLocaleString();
+        return <span>{formattedDate}</span>;
+      },
+    },
+
+    {
+      key: 8,
+      title: "Course Name",
+      // dataIndex: "email",
+      render: (_, record) => {
+        if (record.instructorEmail) {
+          return record.instructorEmail;
+        } else {
+          return "N/A";
+        }
+      },
+    },
+
+    {
+      key: 4,
+      title: "File",
+      dataIndex: "file",
+      render: (_, record) => (
+        <Button
+          type="link"
+          icon={<FileOutlined />}
+          onClick={() => window.open(`http://localhost:8080/files/${record.file}`, "_blank", "noreferrer")}
+        >
+          Open File
+        </Button>
+      ),
+    },
+    {
+      key: 6,
+      title: "Actions",
+      width: 150,
+      render: (record) => {
+        return (
+          <>
+            <Tooltip title="Click to upload the file">
+              <Button 
+                onClick={() => onSubmitModal(record)}
+                disabled={isDueDatePassed(record.dueDate)}
+                icon={<FileOutlined />}
+              >
+                Upload
+                </Button>
+            </Tooltip>
+          </>
+        );
+      },
+    },
+    
+
+  ];
+  const onSubmitModal = (record) => {
+    setShowEditModal(true);
+    setRecord(record);
+  };
 
   return (
     <div>
-      <div className="text-3xl">Assignments</div>
-      <table className="mt-5 min-w-full bg-white border border-gray-300">
-        <thead>
-          <tr className="bg-Teal text-white">
-            <th className="py-2 px-4 border-b">Title</th>
-            <th className="py-2 px-4 border-b">Description</th>
-            <th className="py-2 px-4 border-b">Due Date</th>
-            <th className="py-2 px-4 border-b">Course Name</th>
-            <th className="py-2 px-4 border-b">File</th>
-            <th className="py-2 px-4 border-b">Submission</th>
-          </tr>
-        </thead>
-        <tbody>
-          {assignments.map((assignment, index) => (
-            <tr key={assignment._id} className={index % 2 === 0 ? 'bg-gray-100' : ''}>
-              <td className="py-2 px-4 border-b border-r">{assignment.title}</td>
-              <td className="py-2 px-4 border-b border-r">{assignment.description}</td>
-              <td className="py-2 px-4 border-b border-r">{assignment.dueDate}</td>
-              <td className="py-2 px-4 border-b border-r">{assignment.courseId.title}</td>
-              <td className="py-2 px-4 border-b border-r">
-                <button
-                  onClick={() => window.open(`http://localhost:8080/files/${assignment.file}`, "_blank", "noreferrer")}
-                >
-                  Open File
-                </button>
-              </td>
-              <td className="py-2 px-4 border-b">
-                <input
-                  type="file"
-                  accept="*/*"
-                  onChange={(e) => handleFileInputChange(assignment._id, e)}
-                />
-                <button
-                  onClick={() => handleSubmit(assignment._id, assignment.dueDate)}
-                  disabled={isDueDatePassed(assignment.dueDate)}
-                  className={`px-4 py-2 bg-Teal text-white ${isDueDatePassed(assignment.dueDate) ? 'cursor-not-allowed' : 'hover:bg-gray-700'}`}
-                >
-                  Submit
-                </button>
-              </td>
-              
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      <Typography.Title level={2}>Assignments</Typography.Title>
+      <Table columns={columns} dataSource={assignments} />
+      <Modal
+        title="Upload File"
+        open={showEditModal}
+        okText="Save"
+        onOk={() => handleSubmit(record._id)}
+        onCancel={() => setShowEditModal(false)}
+      >
+        <Form.Item
+      name="upload"
+      label="Upload"
+      valuePropName="fileList"
+      accept=".docx .pdf"
+      customRequest={customRequest}
+      onChange={(e) => handleFileInputChange(record._id, e)}
+    >
+      <Upload name="logo" listType="picture">
+        <Button icon={<UploadOutlined />}>Click to upload</Button>
+      </Upload>
+    </Form.Item>
+       
+      </Modal>
+
     </div>
   );
 };

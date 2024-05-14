@@ -7,21 +7,19 @@ import {
 } from "@ant-design/icons";
 import axios from "axios";
 
-const baseUrl = process.env.REACT_APP_BASE_URL;
-
 export default function UserDetails() {
   const [users, setUsers] = useState([]);
 
   useEffect(() => {
     axios
-      .get(`${baseUrl}admin/total-users`, {
+      .get(`http://localhost:8080/api/allUsers`, {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       })
       .then((response) => {
         setUsers(response.data);
       })
       .catch((error) => {
-        console.error("Error fetching products:", error);
+        console.error("Error fetching users:", error);
       });
   }, []);
 
@@ -29,7 +27,8 @@ export default function UserDetails() {
     {
       key: 1,
       title: "User's Name",
-      dataIndex: "name",
+      // dataIndex: "firstName",
+      render: (user) => `${user.firstName} ${user.lastName}`,
     },
     {
       key: 2,
@@ -39,36 +38,36 @@ export default function UserDetails() {
     {
       key: 3,
       title: "Role",
-      dataIndex: "__t",
-      render: (role) => {
+      dataIndex: "accountType",
+      render: (accountType) => {
         const roleMap = {
-          VehicleOwner: "Vehicle Owner",
-          ServiceProvider: "Service Provider",
-          WorkshopOwner: "Workshop Owner",
+          Student: "student",
+          Instructor: "instructor",
+          // WorkshopOwner: "Workshop Owner",
         };
-        return roleMap[role] || role;
+        return roleMap[accountType] || accountType;
       },
       filters: [
-        { text: "Vehicle Owner", value: "VehicleOwner" },
-        { text: "Service Provider", value: "ServiceProvider" },
-        { text: "Workshop Owner", value: "WorkshopOwner" },
+        { text: "Student", value: "student" },
+        { text: "Instructor", value: "instructor" },
+        // { text: "Workshop Owner", value: "WorkshopOwner" },
       ],
-      onFilter: (value, record) => record.__t === value,
+      onFilter: (value, record) => record.accountType === value,
     },
     {
       key: 4,
       title: "Verified",
-      dataIndex: "isVerified",
-      render: (isVerified) => (
-        <Tag color={isVerified ? "green" : "red"} style={{ fontSize: 14 }}>
-          {isVerified ? "Yes" : "No"}
+      dataIndex: "verified",
+      render: (verified) => (
+        <Tag color={verified ? "green" : "red"} style={{ fontSize: 14 }}>
+          {verified ? "Yes" : "No"}
         </Tag>
       ),
       filters: [
         { text: "Yes", value: true },
         { text: "No", value: false },
       ],
-      onFilter: (value, record) => record.isVerified === value,
+      onFilter: (value, record) => record.verified === value,
     },
     {
       key: 5,
@@ -136,7 +135,7 @@ export default function UserDetails() {
   const onBlock = async (record) => {
     try {
       const response = await axios.put(
-        `${baseUrl}admin/block-user/${record._id}`,
+        `http://localhost:8080/api/blockUser/${record._id}`,
         {},
         {
           headers: {
@@ -165,7 +164,7 @@ export default function UserDetails() {
   const onUnblock = async (record) => {
     try {
       const response = await axios.put(
-        `${baseUrl}admin/unblock-user/${record._id}`,
+        `http://localhost:8080/api/unblockUser/${record._id}`,
         {},
         {
           headers: {
@@ -197,7 +196,7 @@ export default function UserDetails() {
       okType: "danger",
       onOk: async () => {
         await axios
-          .delete(`${baseUrl}admin/delete-user/${record._id}`, {
+          .delete(`http://localhost:8080/api/deleteUser/${record._id}`, {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("token")}`,
             },

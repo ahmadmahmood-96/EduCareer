@@ -4,6 +4,8 @@ import { useParams } from 'react-router-dom';
 import DynamicAccordion from "../AccessCourseContent/DynamicAccordion"
 import Topbar from '../../components/Navbar/NavbarPage';
 import { useNavigate } from 'react-router-dom';
+import { FaUser } from 'react-icons/fa';
+import { FaStar } from 'react-icons/fa';
 
 const ViewCourseDetails = () => {
   const { id: courseId } = useParams();
@@ -14,6 +16,7 @@ const ViewCourseDetails = () => {
   const [error, setError] = useState('');
   const [msg, setMsg] = useState('');
   const [isCourseInCart, setIsCourseInCart] = useState(false);
+  const [reviews, setReviews] = useState([]);
 
 
   const navigate=useNavigate();
@@ -65,6 +68,17 @@ const ViewCourseDetails = () => {
       } catch (error) {
         console.log(error);
       }
+
+      const fetchReviews = async () => {
+        try {
+          const response = await axios.get(`http://localhost:8080/api/reviews/${courseId}`);
+          setReviews(response.data);
+        } catch (error) {
+          console.error('Error fetching reviews:', error);
+        }
+      };
+  
+      fetchReviews();
     };
 
     if (courseId) {
@@ -72,6 +86,7 @@ const ViewCourseDetails = () => {
     }
   }, [courseId]);
 
+  
   const handleModuleClick = (module) => {
     setSelectedModule(module);
   };
@@ -192,34 +207,33 @@ const ViewCourseDetails = () => {
   return (
     <>
     <Topbar/>
-    <div className="container mx-auto mt-8  mb-8">
-    <h1 className="text-xl font-bold mb-2" >Course Details</h1>
-    <div className='flex flex-row gap-2'>
-        <div className='flex flex-col max-w-2xl mt-2'>
-
-              <div className='h-auto max-w-2xl overflow-hidden'>
+    <div className="p-10 mt-8 mb-8 bg-offWhite mx-20 border-radius rounded-lg">
+    <h1 className="text-3xl font-bold my-3" >Course Details</h1>
+    <div className=''>
+        <div className='flex flex-row mt-5 p-5 px-10 bg-white border-radius rounded-lg'>
+              <div className='mt-5  overflow-hidden'>
               {imageData && (
-                  <img src={imageData} alt={courseId.title} className="w-full h-full object-cover rounded-md mb-2" />
+                  <img 
+                  src={imageData} alt={courseId.title} 
+                  className="h-auto max-w-2xl rounded-lg mb-2" 
+                  style={{ width: '600px' }} // Increase width here
+                  />
                 )}
               </div>
-              
-              <div className='mt-2'>
+              <div className="border-l border-Solitude ml-8"></div>
+              <div className='max-w-4xl m-5 p-5'>
                 <h1 className="text-3xl font-bold mb-2">{courseDetails.title}</h1>
                 <p className="text-md font-bold text-Teal">{courseDetails.category}</p>
-                <p className="text-sm mb-4">{courseDetails.description}</p>
+                <p className="text-md mb-4">{courseDetails.description}</p>
+                <div><strong>Instructor Name:</strong> {courseDetails.instructor}</div> 
+                <div><strong>Course Duration:</strong> {courseDetails.duration}</div> 
+                <div><strong>Pre Requisites:</strong> {courseDetails.preRequisite}</div> 
               </div>
           </div>
 
-    <div className=''>
-    <div className="text-lg font-bold text-Teal  flex-1 p-4 mt-2 mx-auto ">
-           
-    <div className="my-2 p-4 m-4 bg-Solitude">Instructor Name: {courseDetails.instructor}</div> 
-    <div className="my-2 p-4 m-4 bg-Solitude" >Course Duration: {courseDetails.duration}</div> 
-    <div className="my-2 p-4 m-4 bg-Solitude">Pre Requisites: {courseDetails.preRequisite}</div> 
-          
-          </div>
-          <div className='bg-Solitude p-8 m-8 pl-16 mt-2  mb-5'>
-              <h1 className="text-2xl font-bold">Price: Rs. {courseDetails.price}</h1>
+    <div>
+          <div className='flex flex-row  mt-8  mb-5'>
+              <h1 className="text-2xl font-bold">Rs. {courseDetails.price}</h1>
                         {courseDetails.price == "" && (
                       <div>
                         <button
@@ -234,7 +248,7 @@ const ViewCourseDetails = () => {
                 {!isCourseInCart && courseDetails.price !== "" && (
                   <div>
                     <button
-                      className="mt-4 px-6 py-3 font-bold text-white bg-Teal text-sm"
+                      className="px-6 py-3 mx-3 font-bold text-white bg-Teal text-sm"
                       onClick={(event) => handleAddToCart(courseDetails._id, event)}
                     >
                       Add to Cart
@@ -257,14 +271,8 @@ const ViewCourseDetails = () => {
                     </div>
                 )}
           </div>
-         
           </div>
-
-        
-
-
           <div>
-
           </div>
 
     </div>
@@ -276,6 +284,54 @@ const ViewCourseDetails = () => {
         <DynamicAccordion modules={modules} onModuleClick={handleModuleClick} />
       </div>
       </div>
+
+
+      <div> 
+      <h4 className="m-4 mt-8 text-2xl font-bold mb-4 ">Course Reviews:</h4>
+      <ul>
+        {reviews.map(review => (
+          <li key={review._id} className='bg-white shadow m-4 border p-4'>
+             
+             <p style={{ display: 'flex', alignItems: 'center' }}>
+              <FaUser size={24} className="text-gray-500 mr-2 border border-gray-300 rounded-full p-1" />
+              <span>{review.userName}</span>
+            </p>
+            <p style={{ display: 'flex', alignItems: 'center' }}>
+              Rating: 
+              <span style={{ display: 'flex', flexDirection: 'row' }}>
+                {[...Array(review.courseRating)].map((_, index) => (
+                  <FaStar key={index} className="ml-1 text-teal-500" style={{ color: '#ffc107' }} />
+                ))}
+              </span>
+            </p>
+            <p>{review.courseReview}</p>
+          </li>
+        ))}
+      </ul>
+    </div>
+
+    <h4 className="m-4 mt-8 text-2xl font-bold mb-4 ">Instructor Reviews:</h4>
+    <ul>
+        {reviews.map(review => (
+          <li key={review._id} className='bg-white shadow m-4 border p-4'>
+             
+             <p style={{ display: 'flex', alignItems: 'center' }}>
+              <FaUser size={24} className="text-gray-500 mr-2 border border-gray-300 rounded-full p-1" />
+              <span>{review.userName}</span>
+            </p>
+            <p style={{ display: 'flex', alignItems: 'center' }}>
+              Rating: 
+              <span style={{ display: 'flex', flexDirection: 'row' }}>
+                {[...Array(review.instructorRating)].map((_, index) => (
+                  <FaStar key={index} className="ml-1 text-teal-500" style={{ color: '#ffc107' }} />
+                ))}
+              </span>
+            </p>
+            <p>{review.instructorReview}</p>
+          </li>
+        ))}
+      </ul>
+
     </div>
     </>
   );

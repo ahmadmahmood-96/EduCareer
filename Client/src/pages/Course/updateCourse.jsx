@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import "tailwindcss/tailwind.css";
 
+
 function Updatecourse() {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -239,24 +240,6 @@ function Updatecourse() {
             name="file"
             onChange={handleFileChange}
           />
-          {/* <div className="mb-4">
-            <label
-              htmlFor="capacity"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Course Capacity<span style={{ color: "red" }}>*</span>: */}
-          {/* </label>
-            <input
-              className="mt-1 p-2 border w-full"
-              name="capacity"
-              value={course.capacity}
-              onChange={(e) =>
-                setCourse({ ...course, capacity: e.target.value })
-              }
-              required
-            />
-          </div> */}
-
           <div className="text-center mt-3">
             <button
               type="submit"

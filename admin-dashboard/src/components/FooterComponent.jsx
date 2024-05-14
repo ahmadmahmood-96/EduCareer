@@ -6,7 +6,7 @@ const FooterComponent = () => {
   return (
     <Footer style={footerStyle}>
       <Typography.Text style={{ color: "white" }}>
-        © 2023 Copyright <b> AutoAid</b>. All Rights Reserved
+        © 2024 Copyright <b> EduCareer</b>. All Rights Reserved
       </Typography.Text>
     </Footer>
   );
@@ -21,7 +21,7 @@ const footerStyle = {
   height: 55,
   width: "100vw",
   color: "#fff",
-  backgroundColor: "#427D9D",
+  backgroundColor: "#3F9495",
 };
 
 export default FooterComponent;

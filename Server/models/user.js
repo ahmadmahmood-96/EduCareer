@@ -32,6 +32,10 @@ const userSchema = new mongoose.Schema({
         default: false
     },
 
+    isBlocked: {
+        type: Boolean,
+    },
+
     enrolledCourses: [{ type: mongoose.Schema.Types.ObjectId, ref: 'courses' }],
 });
 

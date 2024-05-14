@@ -40,5 +40,20 @@ const validate = (data) => {
 	return schema.validate(data);
 };
 
-
+router.get("/admin/:userId", async (req, res) => {
+	try {
+	  const userId = req.params.userId;
+	  
+	  // Fetch user details from the database
+	  const user = await adminModel.findById(userId);
+  
+	  if (!user) {
+		return res.status(404).json({ message: "User not found" });
+	  }
+	  return res.status(200).json(user.name);
+	} catch (error) {
+	  console.error("Error fetching user details:", error);
+	  return res.status(500).json({ message: "Internal server error" });
+	}
+  });
 module.exports = router;

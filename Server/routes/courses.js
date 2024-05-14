@@ -159,21 +159,23 @@ router.get('/updatecourses/:id', async (req, res) => {
     }
 });
   
-  // router.delete('/deletecourses/:id', (req, res) => {
-  //   const id = req.params.id;
-  
-  //   CoursesModel.findByIdAndDelete(id)
-  //     .then(deletedCourse => {
-  //       if (!deletedCourse) {
-  //         return res.status(404).json({ error: 'Course not found' });
-  //       }
-  //       res.json({ message: 'Course deleted successfully' });
-  //     })
-  //     .catch(err => res.status(500).json({ error: err.message }));
-  // });
+router.post('/courses/:courseId/finish', async (req, res) => {
+  try {
+    console.log("demooooooo demooooooooooooooooooooooooooooooooo");
+    const courseId = req.params.courseId;
+    const status = req.body.status;
 
+    // Update the status of the course in the database
+    await CoursesModel.findByIdAndUpdate(courseId, { status: status });
 
-  
+    res.status(200).json({ message: 'Course status updated successfully' });
+    console.log("updated");
+  } catch (error) {
+    console.error('Error updating course status:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
   router.get('/searchcourses', async (req, res) => {
     try {
       const searchTerm = req.query.searchTerm;

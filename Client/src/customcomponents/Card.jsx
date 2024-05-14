@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { FaPencilAlt, FaTrash } from 'react-icons/fa';
 
-const CourseCard = ({ course, onEnroll, onHover,type ,onDelete, onAddToCart}) => {
+const CourseCard = ({ course, onEnroll, onHover,type , onUpdate, onDelete, onAddToCart}) => {
 
   const navigate = useNavigate();
   const [imageData, setImageData] = useState(null);
@@ -25,8 +25,10 @@ const CourseCard = ({ course, onEnroll, onHover,type ,onDelete, onAddToCart}) =>
   };
 
 
-  const handleUpdateClick = () => {
-    navigate(`/UpdateCourse/${course._id}`);
+  const handleUpdateClick  =() => {
+    onUpdate(course._id);
+
+    // navigate(`/UpdateCourse/${course._id}`);
   };
 
   const handleDeleteClick = () => {
@@ -134,7 +136,10 @@ const CourseCard = ({ course, onEnroll, onHover,type ,onDelete, onAddToCart}) =>
         </button>
 
         {/* Update Icon */}
-        <button onClick={handleUpdateClick}>
+        <button 
+        // onClick={handleUpdateClick}
+        onClick={ handleUpdateClick}
+        >
           <FaPencilAlt />
         </button>
 
