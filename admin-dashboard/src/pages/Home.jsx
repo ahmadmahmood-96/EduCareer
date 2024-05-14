@@ -20,7 +20,7 @@ const Home = () => {
   };
 
   useEffect(() => {
-    document.title = "AutoAid - Home";
+    document.title = "EduCareer - Home";
   }, []);
 
   return isAuthenticated() ? (

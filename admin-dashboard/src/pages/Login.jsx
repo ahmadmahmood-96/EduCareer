@@ -17,7 +17,7 @@ import { useNavigate } from "react-router-dom";
 export default function Login() {
   const navigate = useNavigate();
   useEffect(() => {
-    document.title = "AutoAid - Login";
+    document.title = "EduCareer - Login";
     if (localStorage.getItem("token")) navigate("/home");
   });
 
@@ -29,9 +29,16 @@ export default function Login() {
       const response = await axios.post(`http://localhost:8080/api/login-detail`, values);
       console.log(response.data);
       
+      // const { data: res } = await axios.post(url, state);
+      // localStorage.setItem("token", res.data.userId);
+      // localStorage.setItem("account type", res.data.accountType);
+      // window.dispatchEvent(new Event('storageChange'));
+      // console.log(res.data);
+      // navigate("/home");
+
       if (response.status === 200) {
-        console.log("tokennn",response.data.data.token);
-        localStorage.setItem("token", response.data.data.token);
+        console.log("tokennn",response.data.data.userId);
+        localStorage.setItem("token",  response.data.data.userId);
         message.success(response.data.message);
         //console.log("token",localStorage.getItem());
         setEmail("");
@@ -162,7 +169,7 @@ export default function Login() {
         lg={{ span: 12, order: 1 }}
         xl={{ span: 12, order: 1 }}
         style={{
-          backgroundColor: "#00BE00",
+          backgroundColor: "#2F6C6D",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
@@ -171,13 +178,13 @@ export default function Login() {
         }}
       >
         <Flex vertical gap="middle" align="center">
-          <Image src="AutoAidLogo.png" alt="AutoAid Logo" preview={false} />
+          {/* <Image src="AutoAidLogo.png" alt="AutoAid Logo" preview={false} /> */}
           <Typography.Title
             level={2}
-            style={{ fontWeight: "bold", textAlign: "center" }}
+            style={{ fontWeight: "bold", textAlign: "center",  color:"#fff"}}
           >
-            Welcome to Admin Dashboard
-          </Typography.Title>9
+            EduCareer Admin Dashboard
+          </Typography.Title>
         </Flex>
       </Col>
     </Row>

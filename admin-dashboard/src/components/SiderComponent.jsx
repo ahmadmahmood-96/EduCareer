@@ -9,6 +9,7 @@ import {
   UserOutlined,
   ShopOutlined,
   SafetyOutlined,
+  BookOutlined,
 } from "@ant-design/icons";
 
 const SiderComponent = () => {
@@ -39,24 +40,9 @@ const SiderComponent = () => {
 
 const items = [
   { key: "/home", label: "Dashboard", icon: <HomeOutlined /> },
-  {
-    key: "sub1",
-    label: "Products",
-    icon: <AppstoreOutlined />,
-    children: [
-      { key: "/home/add-product", label: "Add Products" },
-      { key: "/home/view-product", label: "View Products" },
-    ],
-  },
-  {
-    key: "sub2",
-    label: "Insurances",
-    icon: <SafetyOutlined />,
-    children: [
-      { key: "/home/add-insurance", label: "Add Insurance" },
-      { key: "/home/view-insurance", label: "View Insurance" },
-    ],
-  },
+ 
+ 
+  { key: "/home/course-details", label: "Course Details", icon: <BookOutlined /> },
   { key: "/home/user-details", label: "User Details", icon: <UserOutlined /> },
   { key: "/home/support-section", label: "Support Section", icon: <SolutionOutlined /> },
   {

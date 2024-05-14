@@ -1,18 +1,15 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
+import { Typography, Form, Input, Button, DatePicker, Upload, message } from "antd";
+import { UploadOutlined } from "@ant-design/icons";
 
+const { TextArea } = Input;
 
 const Assignment = ({ courseId }) => {
-  const [title, setTitle] = useState("");
-  const [file, setFile] = useState(null);
-  const [dueDate, setDueDate] = useState("");
-  const [description, setDescription] = useState("");
+  const [form] = Form.useForm();
   const [assignment, setAssignment] = useState([]);
-  const [responses, setResponses] = useState([]);
-  const [selectedAssignment, setSelectedAssignment] = useState(null);
-
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -26,49 +23,45 @@ const Assignment = ({ courseId }) => {
         `http://localhost:8080/api/View?courseId=${courseId}`
       );
       setAssignment(result.data.data);
-
-      // Fetch responses for each assignment
-      // const responsePromises = result.data.data.map(async (assignment) => {
-      //   const responseResult = await axios.get(
-      //     `http://localhost:8080/api/submitassignment/responses?assignmentId=${assignment._id}`
-      //   );
-      //   return {
-      //     assignmentId: assignment._id,
-      //     responses: responseResult.data.data,
-      //   };
-      // });
-
-      // const responsesData = await Promise.all(responsePromises);
-      // setResponses(responsesData);
     } catch (error) {
       console.error("Axios error:", error);
     }
   };
 
-  const submitFile = async (e) => {
-    e.preventDefault();
+  const onFinish = async (values) => {
     const formData = new FormData();
     formData.append("courseId", courseId);
-    formData.append("title", title);
-    formData.append("file", file);
-    formData.append("dueDate", dueDate);
-    formData.append("description", description);
+    formData.append("title", values.title);
+    formData.append("file", values.file[0].originFileObj);
+    formData.append("dueDate", values.dueDate.format("YYYY-MM-DD HH:mm:ss"));
+    formData.append("description", values.description);
 
     try {
       const result = await axios.post(
         `http://localhost:8080/api/Upload?courseId=${courseId}`,
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
+        formData
       );
-      alert("Assignment Uploaded")
+      message.success("Assignment Uploaded");
       console.log(result);
       viewFile();
+      form.resetFields();
     } catch (error) {
       console.error("Axios error:", error);
+      message.error("Failed to upload assignment. Please try again.");
+    }
+  };
+
+  const handleDelete = async (assignmentId) => {
+    const confirmDeletion = window.confirm(
+      "Are you sure you want to delete this assignment?"
+    );
+    if (confirmDeletion) {
+      try {
+        await axios.delete(`http://localhost:8080/api/deleteAss/${assignmentId}`);
+        viewFile();
+      } catch (error) {
+        console.error("Axios error:", error);
+      }
     }
   };
 
@@ -77,139 +70,101 @@ const Assignment = ({ courseId }) => {
     window.open(`http://localhost:8080/files/${file}`, "_blank", "noreferrer");
   };
 
-  const handleDelete = async (assignmentId) => {
-    const confirmDeletion = window.confirm('Are you sure you want to delete this assignment?');
-    if (confirmDeletion) {
-    try {
-      await axios.delete(`http://localhost:8080/api/deleteAss/${assignmentId}`);
-      viewFile();
-    } catch (error) {
-      console.error("Axios error:", error);
-    }
-  }
-  };
-
   const handleSubmissions = (assignmentId) => {
-    navigate(`/submitted-assignments/${assignmentId}`, 
-    // { state: { courseId } }
-    );
+    navigate(`/submitted-assignments/${assignmentId}`);
   };
 
   return (
-    <div className=" bg-white mx-auto p-4 md:p-8 ">
-      <form className=" mx-auto" onSubmit={submitFile}>
-        <h4 className="text-2xl font-semibold mb-4">Add Assignment</h4>
-        <div className="mb-4">
-          <label
-            htmlFor="title"
-            className="block text-sm font-medium text-gray-600 mb-1"
-          >
-            Title:
-          </label>
-          <input
-            type="text"
-            id="title"
-            className="form-input w-full sm:w-2/3 border border-gray-300 focus:outline-none focus:border-blue-500 px-4 py-2"
-            placeholder="Enter title"
-            onChange={(e) => setTitle(e.target.value)}
-            required
-          />
-        </div>
-        <div className="mb-4">
-          <label
-            htmlFor="file"
-            className="block text-sm font-medium text-gray-600 mb-1"
-          >
-            Choose File:
-          </label>
-          <input
-            type="file"
-            id="file"
-            className="form-input w-full sm:w-2/3 border border-gray-300 focus:outline-none focus:border-blue-500 px-4 py-2"
-            accept="*/*"
-            onChange={(e) => setFile(e.target.files[0])}
-            required
-          />
-        </div>
-        <div className="mb-4">
-          <label
-            htmlFor="dueDate"
-            className="block text-sm font-medium text-gray-600 mb-1"
-          >
-            Due Date and Time:
-          </label>
-          <input
-            type="datetime-local"
-            id="dueDate"
-            className="form-input w-full sm:w-2/3 border border-gray-300 focus:outline-none focus:border-blue-500 px-4 py-2"
-            value={dueDate}
-            onChange={(e) => setDueDate(e.target.value)}
-            required
-          />
-        </div>
-        <div className="mb-4">
-          <label
-            htmlFor="description"
-            className="block text-sm font-medium text-gray-600 mb-1"
-          >
-            Description:
-          </label>
-          <textarea
-            id="description"
-            className="form-input w-full sm:w-2/3 border border-gray-300 focus:outline-none focus:border-blue-500 px-4 py-2"
-            placeholder="Enter description"
-            rows="3"
-            onChange={(e) => setDescription(e.target.value)}
-          ></textarea>
-        </div>
-        <button
-          className="bg-Teal text-white mt-2 px-4 py-2  hover:bg-teal-600 focus:outline-none"
-          type="submit"
+    <div style={{ margin: "0 auto", maxWidth: 800 }}>
+    <div className="module-container bg-white mx-auto p-4 md:p-8">
+      <Typography.Title level={2}>Add Assignment</Typography.Title>
+      <Form
+        form={form}
+       // encType="multipart/form-data"
+        className="form-style"
+        onFinish={onFinish}
+        labelCol={{ span: 6}}
+        wrapperCol={{ span: 8 }}
+      >
+        <Form.Item
+          name="title"
+          label="Title"
+          rules={[{ required: true, message: "Please enter the title!" }]}
         >
-          Submit
-        </button>
-      </form>
-
+          <Input placeholder="Enter title" />
+        </Form.Item>
+        <Form.Item
+          name="file"
+          label="Choose File"
+          rules={[{ required: true, message: "Please choose a file!" }]}
+          getValueFromEvent={(e) => e.fileList}
+          valuePropName="fileList"
+        >
+          <Upload beforeUpload={() => false} multiple={false}>
+            <Button icon={<UploadOutlined />}>Click to Upload</Button>
+          </Upload>
+        </Form.Item>
+        <Form.Item
+          name="dueDate"
+          label="Due Date and Time"
+          rules={[{ required: true, message: "Please select the due date and time!" }]}
+        >
+          <DatePicker showTime format="YYYY-MM-DD HH:mm:ss" />
+        </Form.Item>
+        <Form.Item
+          name="description"
+          label="Description"
+          rules={[{ required: true, message: "Please enter the description!" }]}
+        >
+          <TextArea placeholder="Enter description" rows={4} />
+        </Form.Item>
+        <Form.Item wrapperCol={{ offset: 4, span: 10 }}>
+          <Button type="primary" htmlType="submit">
+            Submit
+          </Button>
+        </Form.Item>
+      </Form>
       <div className="uploaded mt-8">
-        <h4 className="text-2xl font-semibold mb-4">Uploaded Assignments</h4>
+        <Typography.Title level={2}>Uploaded Assignments</Typography.Title>
         {Array.isArray(assignment) && assignment.length > 0 ? (
           assignment.map((data) => (
-            <div key={data._id} className="mb-4 p-4 border border-gray-300 ">
-              <h6 className="text-lg font-semibold mb-2">
-                Title: {data.title}
-              </h6>
-              <p className="mb-2">Description: {data.description}</p>
-              <p className="mb-2">Due Date and Time: {data.dueDate}</p>
-
-              <button
-                className="bg-Teal text-white mx-3 mt-2 px-4 py-2  hover:bg-teal-600 focus:outline-none "
+            <div key={data._id} className="module-item border p-4 mb-4">
+              <Typography.Title level={4}>Title: {data.title}</Typography.Title>
+              <Typography.Paragraph>Description: {data.description}</Typography.Paragraph>
+              <Button
+                type="primary"
+                className="mt-2"
                 onClick={() => showAssFiles(data.file)}
               >
                 Show PDF
-              </button>
+              </Button>
               <Link
                 to={`/updateAss/${data._id}`}
-                className="bg-white text-Teal mx-3 mt-2 px-4 py-2  hover:bg-teal-600 focus:outline-non"
+                className="text-blue-600 ml-2 hover:underline mt-2"
               >
                 Update
               </Link>
-              <button
-                className="bg-red-500 text-white mx-3 mt-2 px-4 py-2  hover:bg-red-600 focus:outline-non "
+              <Button
+                danger
+                className="ml-2 mt-2"
                 onClick={() => handleDelete(data._id)}
               >
                 Delete
-              </button>
-              <button className="bg-green-500 text-white mx-3 mt-2 px-4 py-2  hover:bg-red-600 focus:outline-non"  
+              </Button>
+              <Button
+                type="default"
+                className="ml-2 mt-2"
                 onClick={() => handleSubmissions(data._id)}
-                >
-                 Submissions
-                </button>
+              >
+                Submissions
+              </Button>
             </div>
           ))
         ) : (
-          <p className="text-gray-500">No assignments available.</p>
+          <p>No assignments available.</p>
         )}
       </div>
+    </div>
     </div>
   );
 };

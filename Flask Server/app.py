@@ -93,7 +93,7 @@ def hello_world():  # put application's code here
     return 'Hello World!'
 
 
-@app.route('/upload', methods=['POST'])
+@app.route('/quiz', methods=['POST'])
 def upload():
     if 'file' not in request.files:
         return jsonify({"error": "No file part"}), 400
@@ -103,52 +103,49 @@ def upload():
     if file.filename == '':
         return jsonify({"error": "No selected file"}), 400
 
-    try:
-        # Save the uploaded file
-        uploaded_file_path = 'uploaded_file.pdf'
-        file.save(uploaded_file_path)
+   
+    # Save the uploaded file
+    uploaded_file_path = 'uploaded_file.pdf'
+    file.save(uploaded_file_path)
 
-        # Extract text from PDF
-        extracted_text = extract_text_from_pdf(uploaded_file_path)
+    # Extract text from PDF
+    extracted_text = extract_text_from_pdf(uploaded_file_path)
 
-        # Extract sentences from text
-        sentences = extract_sentences(extracted_text)
+    # Extract sentences from text
+    sentences = extract_sentences(extracted_text)
 
-        # Initialize questions dictionary
-        questions_dict = {}
-        question_count = 1
+    # Initialize questions dictionary
+    questions_dict = {}
+    question_count = 1
 
-        # Generate questions
-        for sentence in sentences:
-            words = extract_keywords(sentence)
-            question_generated = False
+    # Generate questions
+    for sentence in sentences:
+        words = extract_keywords(sentence)
+        question_generated = False
 
-            for word in words:
-                synsets = wn.synsets(word, 'n')
-                if len(synsets) > 3 and word in str(synsets):
-                    synset_to_use = synsets[0]
-                    distractors = get_distractors_wordnet(synset_to_use, word)
+        for word in words:
+            synsets = wn.synsets(word, 'n')
+            if len(synsets) > 3 and word in str(synsets):
+                synset_to_use = synsets[0]
+                distractors = get_distractors_wordnet(synset_to_use, word)
 
-                    if len(distractors) > 3:
-                        question_text = get_question(sentence, word)
-                        question_dict = {
-                            'question_text': question_text,
-                            'correct_answer': word,
-                            'wrong_options': distractors[:3]
-                        }
-                        questions_dict[f'question{question_count}'] = question_dict
-                        question_count += 1
-                        question_generated = True
-                        break
+                if len(distractors) > 3:
+                    question_text = get_question(sentence, word)
+                    question_dict = {
+                        'question_text': question_text,
+                        'correct_answer': word,
+                        'wrong_options': distractors[:3]
+                    }
+                    questions_dict[f'question{question_count}'] = question_dict
+                    question_count += 1
+                    question_generated = True
+                    break
 
-            if question_generated and len(questions_dict) >= 10:
-                break
+        if question_generated and len(questions_dict) >= 10:
+            break
 
-        # Return the generated questions
-        return jsonify(questions_dict), 200
-
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
+    # Return the generated questions
+    return jsonify(questions_dict), 200
 
 
 
@@ -202,15 +199,21 @@ def predict():
         "Excellent" : 7,
         "Professional" : 9
     }
+
+    # Define function to get top three roles
+    def get_top_three_roles(probabilities, roles):
+        top_three_indices = np.argsort(probabilities)[-3:][::-1]
+        top_three_roles = [roles[index] for index in top_three_indices]
+        return top_three_roles
+
     # Get data from the request
     data = request.json
-    
+
     # Convert encoded values to original categories
     for key in data:
         data[key] = encoded_mapping[data[key]]
-    
+
     # Extracting features from the received data
-    print(data)
     features = np.array([[
         data['Database Fundamentals'],
         data['Computer Architecture'],
@@ -230,10 +233,10 @@ def predict():
         data['Troubleshooting skills'],
         data['Graphics Designing']
     ]])
-    
-    # Make prediction
-    prediction = loaded_model.predict(features)
-    
+
+    # Make prediction probabilities
+    prediction_probabilities = loaded_model.predict_proba(features)[0]
+
     # Map prediction to corresponding role
     roles = {
         0: 'AI ML Specialist',
@@ -254,15 +257,16 @@ def predict():
         15: 'Software Tester',
         16: 'Technical Writer'
     }
-    print(prediction[0])
-    predicted_role = prediction[0]
-    
+
+    # Get top three roles
+    top_three_roles = get_top_three_roles(prediction_probabilities, roles)
+
     # Prepare response
     response = {
-        "prediction": predicted_role
+        "prediction": top_three_roles
     }
-    
+
     return jsonify(response)
 
 if __name__ == '__main__':
-    app.run(host='192.168.1.9', debug=False, port=5000)
+    app.run(host='192.168.1.5', debug=False, port=5000)

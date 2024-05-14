@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { Modal, Table, Tooltip, Typography, message, Tag, Upload, Form, Button } from "antd";
+import {UploadOutlined, FileOutlined } from "@ant-design/icons";
+import { FileInput } from "lucide-react";
 
 const StudentQuizDetail = () => {
   const [quizzes, setQuizzes] = useState([]);
@@ -47,43 +50,59 @@ const StudentQuizDetail = () => {
     }
   };
 
+  const columns = [
+    {
+      key: 1,
+      title: "Quiz Title",
+      // dataIndex: "firstName",
+      dataIndex: "title",
+      width:250,
+    },
+    {
+      key: 2,
+      title: "Due Date",
+      dataIndex: "date",
+      width:250,
+    },
+    {
+      key: 3,
+      title: "Start Time",
+      dataIndex: "startTime",
+      width:250,
+    },
+
+    {
+      key: 4,
+      title: "End Time",
+      dataIndex: "endTime",
+      width:250,
+    },
+
+    {
+      key: 5,
+      title: "Actions",
+      width:250,
+      render: (_, quiz) => (
+      
+         <Button
+       
+         onClick={() => handleStartClick(quiz.quizId, quiz.courseId)}
+         disabled={
+           !isQuizAvailable(quiz.startTime, quiz.date, quiz.endTime)
+         }
+       >
+         Start
+       </Button>
+      ),
+    },
+    
+
+  ];
+
   return (
     <div className="mt-4">
-      <h2 className="text-2xl font-bold mb-2">Quizzes</h2>
-      <div className="overflow-x-auto">
-        <table className="min-w-full bg-white border border-gray-300">
-          <thead>
-            <tr>
-              <th className="py-2 px-4 border-b">Quiz Title</th>
-              <th className="py-2 px-4 border-b">Start Date</th>
-              <th className="py-2 px-4 border-b">Start Time</th>
-              <th className="py-2 px-4 border-b">End Time</th>
-              <th className="py-2 px-4 border-b">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {quizzes.map((quiz) => (
-              <tr key={quiz._id}>
-                <td className="py-2 px-4 border-b">{quiz.title}</td>
-                <td className="py-2 px-4 border-b">{quiz.date}</td>
-                <td className="py-2 px-4 border-b">{quiz.startTime}</td>
-                <td className="py-2 px-4 border-b">{quiz.endTime}</td>
-                <td className="py-2 px-4 border-b">
-                  <button
-                    className="bg-blue-500 text-white py-1 px-2 rounded mr-2"
-                    onClick={() => handleStartClick(quiz.quizId, quiz.courseId)}
-                    disabled={
-                      !isQuizAvailable(quiz.startTime, quiz.date, quiz.endTime)
-                    }
-                  >
-                    Start
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+      <Typography.Title level={2}>Quizzes</Typography.Title>
+      <Table columns={columns} dataSource={quizzes} />
     </div>
   );
 };

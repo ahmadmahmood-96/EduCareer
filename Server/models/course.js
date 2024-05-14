@@ -12,6 +12,7 @@ const courseschema = new mongoose.Schema({
     categorypaid: String,
     price: String,
     file:String,
+    status : String
 });
 
 const CoursesModel = mongoose.model("courses", courseschema);

@@ -4,8 +4,8 @@ import EnrolledCourses from './EnrolledCourses'
 const MyLearning = () => {
 
   return (
-    <div >
-      MyLearning
+    <div>
+      <h2 className='text-3xl'>MyLearning</h2>
       <EnrolledCourses/>
     </div>
   )

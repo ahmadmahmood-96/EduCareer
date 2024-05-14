@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import Button  from "../../customcomponents/Button"
 import Modal  from "../../customcomponents/Modal"
 import vector from "../../assets/vector.png";
+import { FaRobot } from 'react-icons/fa';
 
 
 
@@ -44,11 +45,21 @@ const Home = () => {
           <p className="text-base leading-7 text-Solitude max-w-sm">
            "Empowering Minds, Transforming Futures – Elevate Your Learning Journey Today!"
           </p>
-          <div className="">
-            <button className="px-6 py-3 mr-4 text-Gray bg-white   text-sm  font-semibold px-6 py-3 mt-4"
+          <div className="flex">
+            <button className="rounded p-2 mr-4 text-Gray bg-white   text-sm  font-semibold  mt-4"
               onClick={handleDiscoverClick}>
-              Discover
+              Discover Courses
             </button>
+
+            {/* Chatbot */}
+
+            <a href="http://localhost:8081" style={{ textDecoration: "none", display: "flex", alignItems: "center" }}>
+              <span className='rounded p-2 mr-4 text-Gray bg-white text-sm font-semibold mt-4' style={{ display: "flex", alignItems: "center" }}>
+                <FaRobot size="30" style={{ marginRight: "8px" }} />
+                Career Bot
+              </span>
+            </a>
+          
           </div>
           
         </div>

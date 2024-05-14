@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { Form, Input, Button, Upload, message } from "antd";
+import { UploadOutlined } from "@ant-design/icons";
 
 const Quiz = ({ courseId }) => {
   const [file, setFile] = useState(null);
@@ -28,7 +30,7 @@ const Quiz = ({ courseId }) => {
 
       // Send the formData to Flask backend
       const response = await axios.post(
-        "http://192.168.0.107:5000/upload",
+        "http://192.168.1.5:5000/quiz",
         formData,
         {
           headers: {
@@ -44,7 +46,7 @@ const Quiz = ({ courseId }) => {
       // Update state with questions received from the backend
       setQuestions(questionsArray);
     } catch (e) {
-      console.error(e.response);
+      console.error(e.response.data);
     } finally {
       setIsLoading(false);
     }
@@ -124,29 +126,39 @@ const Quiz = ({ courseId }) => {
   };
 
   return (
+    <div style={{ margin: "0 auto", maxWidth: 800 }}>
     <div className="flex ">
       <div className="w-[50%] px-10 h-screen py-10">
         <h1 className="text-3xl font-bold mb-4 text-center">Quiz</h1>
         <form onSubmit={handleSubmit}>
-          <div className="mb-4">
-            <label
-              htmlFor="title"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Title
-            </label>
-            <input
-              type="text"
-              id="title"
-              name="title"
-              value={title}
-              onChange={handleTitleChange}
+        <Form.Item
+          label="Title"
+          name="title"
+          rules={[{ required: true, message: "Please enter quiz title" }]}
+        >
+          <Input
+            value={title}
+            onChange={handleTitleChange}
+            placeholder="Enter quiz title"
+          />
+        </Form.Item>
+        <Form.Item
+          label="Add file"
+          name="file"
+          rules={[{ required: true, message: "Please upload a file" }]}
+        >
+          <input
+              type="file"
+              id="file"
+              name="file"
+              onChange={handleChange}
               className="mt-1 p-2 w-full border"
-              placeholder="Enter quiz title"
               required
             />
-          </div>
-          <div className="mb-4">
+          
+        </Form.Item>
+      
+          {/* <div className="mb-4">
             <label
               htmlFor="file"
               className="block text-sm font-medium text-gray-700"
@@ -161,7 +173,7 @@ const Quiz = ({ courseId }) => {
               className="mt-1 p-2 w-full border"
               required
             />
-          </div>
+          </div> */}
           <div className="flex items-center justify-between">
             <button
               type="submit"
@@ -254,6 +266,7 @@ const Quiz = ({ courseId }) => {
           </div>
         )}
       </div>
+    </div>
     </div>
   );
 };

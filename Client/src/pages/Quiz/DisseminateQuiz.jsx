@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import moment from "moment";
+import { Table, Button, Input, DatePicker, Space, Typography, TimePicker ,message} from "antd";
 
 const DisseminateQuiz = ({ courseId }) => {
   const [quizzes, setQuizzes] = useState([]);
@@ -14,24 +16,24 @@ const DisseminateQuiz = ({ courseId }) => {
       .get(`http://localhost:8080/api/quizzes/course/${courseId}`)
       .then((response) => {
         setQuizzes(response.data);
+        console.log(quizzes);
       })
       .catch((error) => {
         console.error("Error fetching quizzes:", error);
       });
   }, [courseId]);
-
   const handleDisseminateClick = (quizId, title) => {
     setSelectedQuiz({ id: quizId, title: title });
-    console.log(title);
     setShowForm(true);
   };
+  
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       const formData = {
         courseId: courseId,
-        quizId: selectedQuiz.id,
+        quizId: selectedQuiz.id, // Access the id property directly
         title: selectedQuiz.title,
         date,
         startTime,
@@ -44,105 +46,98 @@ const DisseminateQuiz = ({ courseId }) => {
       setStartTime("");
       setEndTime("");
       setShowForm(false);
+
+      message.success("Quiz disseminated Successfully");
     } catch (error) {
       console.error("Error submitting form:", error);
     }
   };
+  
+  
 
   const handleCancel = () => {
     setShowForm(false);
   };
+  const handleStartDateChange = (date, dateString) => {
+    // Ensure selected date is not in the past
+    if (moment(dateString).isBefore(moment().format("YYYY-MM-DD"))) {
+      message.error("Start date cannot be in the past");
+    } else {
+      setDate(dateString);
+    }
+  };
+
+  const handleEndDateChange = (date, dateString) => {
+    // Ensure selected date is not in the past
+    if (moment(dateString).isBefore(moment().format("YYYY-MM-DD"))) {
+      message.error("End date cannot be in the past");
+    } else {
+      setDate(dateString);
+    }
+  };
+
+  const columns = [
+    {
+      title: "Quiz Title",
+      dataIndex: "title",
+      key: "title",
+    },
+    {
+      title: "Disseminate Quiz Option",
+      key: "action",
+      render: (_, record) => (
+        <Button
+          type="primary"
+          onClick={() => handleDisseminateClick(record._id, record.title)}
+        >
+          Disseminate
+        </Button>
+      ),
+    },
+  ];
 
   return (
-    <div className="mt-4 bg-white">
-      <h2 className="text-2xl font-bold mb-2">Disseminate Quiz</h2>
-      <div className="overflow-x-auto">
-        <table className="min-w-full bg-white border border-gray-300">
-          <thead>
-            <tr>
-              <th className="py-2 px-4 border-b">Quiz Title</th>
-              <th className="py-2 px-4 border-b">Disseminate Quiz Option</th>
-            </tr>
-          </thead>
-          <tbody>
-            {quizzes.map((quiz) => (
-              <tr key={quiz.id}>
-                <td className="py-2 px-4 border-b">{quiz.title}</td>
-                <td className="py-2 px-4 border-b">
-                  <button
-                    className="bg-teal-700 text-white py-1 px-2 rounded mr-2"
-                    onClick={() => handleDisseminateClick(quiz._id, quiz.title)}
-                  >
-                    Disseminate
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-      {showForm && (
+    <>
+    <div style={{ margin: "0 auto", maxWidth: 800 }}>
+    <Typography.Title level={2}>Disseminate Quiz</Typography.Title>
+      <Table
+        columns={columns}
+        dataSource={quizzes}
+        pagination={false}
+        rowKey={(record) => record.id}
+      />
+     {showForm && (
         <div className="mt-10 bg-white">
           <h3 className="text-xl font-bold mb-2">Dissemination Form</h3>
           <form onSubmit={handleSubmit}>
-            <div className="mb-4">
-              <label htmlFor="date" className="block mb-1">
-                Date:
-              </label>
-              <input
-                type="date"
-                id="date"
-                value={date}
-                onChange={(e) => setDate(e.target.value)}
-                className="border p-1 "
-                required
+            <Space direction="vertical" size={12}>
+              <DatePicker
+                onChange={handleStartDateChange}
+                value={date ? moment(date, "YYYY-MM-DD") : null}
+                format="YYYY-MM-DD"
               />
-            </div>
-            <div className="mb-4">
-              <label htmlFor="startTime" className="block mb-1">
-                Start Time:
-              </label>
-              <input
-                type="time"
-                id="startTime"
-                value={startTime}
-                onChange={(e) => setStartTime(e.target.value)}
-                className="border p-1 "
-                required
+              <TimePicker
+                placeholder="Start Time"
+                value={startTime ? moment(startTime, "HH:mm") : null}
+                onChange={(time, timeString) => setStartTime(timeString)}
               />
-            </div>
-            <div className="mb-4">
-              <label htmlFor="endTime" className="block mb-1">
-                End Time:
-              </label>
-              <input
-                type="time"
-                id="endTime"
-                value={endTime}
-                onChange={(e) => setEndTime(e.target.value)}
-                className="border p-1 "
-                required
+              <TimePicker
+                placeholder="End Time"
+                value={endTime ? moment(endTime, "HH:mm") : null}
+                onChange={(time, timeString) => setEndTime(timeString)}
               />
-            </div>
-            <div>
-              <button
-                type="submit"
-                className="bg-Teal text-white mt-2 mx-3 px-4 py-2  hover:bg-teal-600 focus:outline-non"
-              >
-                Submit
-              </button>
-              <button
-                type="button"
-                onClick={handleCancel}
-                className="bg-red-500 text-white mt-2 mx-3 px-4 py-2  hover:bg-red-600 focus:outline-non "
-              >
-                Cancel
-              </button>
-            </div>
+              <div>
+                <Button type="primary" htmlType="submit">
+                  Submit
+                </Button>
+                <Button onClick={handleCancel}>Cancel</Button>
+              </div>
+            </Space>
           </form>
         </div>
       )}
-    </div>
+      </div>
+    </>
   );
 };
 

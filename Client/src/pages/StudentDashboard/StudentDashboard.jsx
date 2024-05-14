@@ -1,7 +1,7 @@
 import React from 'react';
 import Sidebar, { SidebarItem } from '../../components/SideBar/SideBar';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faGraduationCap, faClipboard, faQuestionCircle,faHistory } from '@fortawesome/free-solid-svg-icons';
+import { faGraduationCap, faClipboard, faQuestionCircle,faHistory ,faCertificate} from '@fortawesome/free-solid-svg-icons';
 import { Outlet } from 'react-router-dom';
 import Topbar from '../../components/Navbar/NavbarPage'
 const StudentDashboard = () => {
@@ -17,6 +17,7 @@ const StudentDashboard = () => {
           <SidebarItem icon={<FontAwesomeIcon icon={faClipboard} />} text="Assignments" to="/studentdashboard/assignments" />
           <SidebarItem icon={<FontAwesomeIcon icon={faQuestionCircle} />} text="Quiz" to="/studentdashboard/quiz"/>
           <SidebarItem icon={<FontAwesomeIcon icon={faHistory} />} text="Orders" to="/studentdashboard/orders"/>
+          <SidebarItem icon={<FontAwesomeIcon icon={faCertificate} />} text="Certificates" to="/studentdashboard/certificates"/>
         </Sidebar>
       </div>
 

@@ -155,7 +155,7 @@ function StudentQuiz() {
         </div>
       ) : (
         <div className="container mt-2  ml-20 flex justify-center items-center flex-col min-h-400 w-400 bg-white rounded-lg shadow overflow-hidden relative">
-          <div className="timer absolute top-0 right-0 p-4 text-lg font-bold text-purple-600">
+          <div className="timer absolute top-0 right-0 p-4 text-lg font-bold text-teal-600">
             Time Remaining:{" "}
             {Math.floor(timeRemaining / 60)
               .toString()
@@ -177,7 +177,7 @@ function StudentQuiz() {
                   key={optionIndex}
                   className={`option-btn shadow-md px-5 py-2 rounded-md border-none outline-none transition duration-300 m-5 min-h-30 ${
                     hoveredOption === option || selectedOption === option
-                      ? "bg-purple-600 text-white"
+                      ? "bg-teal-600 text-white"
                       : "bg-white"
                   }`}
                   onClick={() => handleOptionSelect(option)}
@@ -193,7 +193,7 @@ function StudentQuiz() {
           currentQuestionIndex === shuffledQuestions.length - 1 ? (
             <button
               type="button"
-              className="bg-purple-600 text-white px-10 py-4 rounded-md shadow-md transition duration-200 font-bold text-lg"
+              className="bg-teal-600 text-white px-10 py-4 rounded-md shadow-md transition duration-200 font-bold text-lg"
               onClick={handleSubmitQuiz}
             >
               Submit
@@ -201,7 +201,7 @@ function StudentQuiz() {
           ) : (
             <button
               type="button"
-              className="bg-purple-600 text-white px-10 py-4 rounded-md shadow-md transition duration-200 font-bold text-lg"
+              className="bg-teal-600 text-white px-10 py-4 rounded-md shadow-md transition duration-200 font-bold text-lg"
               onClick={handleNextQuestion}
             >
               Next

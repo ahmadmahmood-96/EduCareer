@@ -18,7 +18,8 @@ export default {
         gray: "#4B4B4C",
         gradient:"#3d7c7d",
         //white: "#fafaf9"
-        white: "#fff"
+        white: "#fff",
+        offWhite:"#f7f7f7"
       },
       animation: {
         slide: "slide 25s linear infinite"
@@ -37,4 +38,7 @@ export default {
     },
   },
   plugins: [],
+  // corePlugins: {
+  //   preflight: false
+  // }
 }

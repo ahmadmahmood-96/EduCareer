@@ -39,7 +39,7 @@ const Topbar = () => {
   return (
     <nav
       id="topbar"
-      className={`bg-Teal border-b border-gray-300 ${
+      className={`bg-Teal border-b z-10 border-gray-300 ${
         isSticky ? "fixed top-0 w-full" : ""
       }`}
     >

@@ -31,6 +31,9 @@ import Quiz from "./pages/InstructorQuiz/Quiz";
 import StudentQuizDetail from "./pages/Quiz/StudentQuizDetail";
 import StudentQuiz from "./pages/Quiz/StudentQuiz";
 import Orders from "./pages/OrderSummary/orders"
+import Career from "./pages/CareerRecommendation/CareerRecommendation"
+import AdminSupport from "./pages/adminresponse"
+import Certificate from "./pages/Certificate/certificate"
 
 function App() {
   const user = localStorage.getItem("token");
@@ -66,7 +69,11 @@ function App() {
                 <Route path="assignments" element={<UploadAssignment />} />
                 <Route path="quiz" element={<StudentQuizDetail />} />
                 <Route path="orders" element={<Orders/>} />
+                <Route path="certificates" element={<Certificate/>}/>
               </Route>
+
+              <Route path="/career-recommendation" element={<Career/>}/>
+            
 
               <Route path="/quiz/:courseId/:quizId" element={<StudentQuiz />} />
               <Route path="cart" element={<Cart/>}></Route>
@@ -78,6 +85,7 @@ function App() {
                <Route path="/profilesettings" element={<ProfileSettings />} />
                <Route path="/viewcoursedetails/:id" element={<ViewCourseDetails/>} />
                <Route path="/accesscontent/:id" element={<AccessCourseContent/>} />
+               <Route path="/admin-response" element={<AdminSupport/>}/>
 
 
                <Route path="/Messenger" element={<Messenger />} />

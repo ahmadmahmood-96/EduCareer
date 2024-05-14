@@ -15,6 +15,7 @@ const orderSchema = new mongoose.Schema({
 
     subtotal : { type:String, required:true},
     payment_status: { type: String, required: true },
+    orderDate: { type: Date, default: Date.now } 
     // {timestamps: true}
 
 });

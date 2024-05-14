@@ -37,6 +37,13 @@ const quizScoreRoute=require('./routes/quizscore')
 const orderRoutes=require('./routes/orders')
 const supportRoute=require('./routes/support');
 const adminRoute = require('./routes/admin')
+const adminDashboardRoute=require('./routes/admindashboard')
+const adminUserDetailsRoute=require('./routes/adminuserdetails')
+const adminOrderDetailsRoute=require('./routes/adminorderdetails')
+const adminCourseDetailsRoute=require('./routes/admincoursedetails')
+const ratingReviewRoute=require('./routes/ratingreview')
+
+
 // Database connection
 connection();
 
@@ -76,6 +83,12 @@ app.use("/api",displayQuizRoute);
 app.use("/api",orderRoutes);
 app.use('/api',supportRoute);
 app.use('/api',adminRoute);
+app.use('/api', adminDashboardRoute);
+app.use('/api', adminUserDetailsRoute);
+app.use('/api', adminOrderDetailsRoute);
+app.use('/api', adminCourseDetailsRoute);
+app.use('/api', ratingReviewRoute);
+
 
 let users = [];
 
