@@ -30,7 +30,7 @@ const Quiz = ({ courseId }) => {
 
       // Send the formData to Flask backend
       const response = await axios.post(
-        "http://192.168.1.5:5000/quiz",
+        "http://10.113.70.214:5000/quiz",
         formData,
         {
           headers: {
@@ -127,38 +127,37 @@ const Quiz = ({ courseId }) => {
 
   return (
     <div style={{ margin: "0 auto", maxWidth: 800 }}>
-    <div className="flex ">
-      <div className="w-[50%] px-10 h-screen py-10">
-        <h1 className="text-3xl font-bold mb-4 text-center">Quiz</h1>
-        <form onSubmit={handleSubmit}>
-        <Form.Item
-          label="Title"
-          name="title"
-          rules={[{ required: true, message: "Please enter quiz title" }]}
-        >
-          <Input
-            value={title}
-            onChange={handleTitleChange}
-            placeholder="Enter quiz title"
-          />
-        </Form.Item>
-        <Form.Item
-          label="Add file"
-          name="file"
-          rules={[{ required: true, message: "Please upload a file" }]}
-        >
-          <input
-              type="file"
-              id="file"
+      <div className="flex ">
+        <div className="w-[50%] px-10 h-screen py-10">
+          <h1 className="text-3xl font-bold mb-4 text-center">Quiz</h1>
+          <form onSubmit={handleSubmit}>
+            <Form.Item
+              label="Title"
+              name="title"
+              rules={[{ required: true, message: "Please enter quiz title" }]}
+            >
+              <Input
+                value={title}
+                onChange={handleTitleChange}
+                placeholder="Enter quiz title"
+              />
+            </Form.Item>
+            <Form.Item
+              label="Add file"
               name="file"
-              onChange={handleChange}
-              className="mt-1 p-2 w-full border"
-              required
-            />
-          
-        </Form.Item>
-      
-          {/* <div className="mb-4">
+              rules={[{ required: true, message: "Please upload a file" }]}
+            >
+              <input
+                type="file"
+                id="file"
+                name="file"
+                onChange={handleChange}
+                className="mt-1 p-2 w-full border"
+                required
+              />
+            </Form.Item>
+
+            {/* <div className="mb-4">
             <label
               htmlFor="file"
               className="block text-sm font-medium text-gray-700"
@@ -174,99 +173,104 @@ const Quiz = ({ courseId }) => {
               required
             />
           </div> */}
-          <div className="flex items-center justify-between">
-            <button
-              type="submit"
-              className="bg-Teal text-white mt-2 px-4 py-2  hover:bg-teal-600 focus:outline-non"
-              disabled={isLoading}
-            >
-              {isLoading ? "Generating..." : "Generate Quiz"}
-            </button>
-          </div>
-        </form>
-      </div>
-      <div className="w-[50%]">
-        <div
-          className="h-screen py-10 overflow-y-auto"
-          style={{ scrollbarWidth: "thin" }}
-        >
-          {questions.map((question, index) => (
-            <div key={index} className="mb-4">
-              <div className="flex items-center justify-between">
-                <p className="font-bold">{`Question ${index + 1}:`}</p>
+            <div className="flex items-center justify-between">
+              <button
+                type="submit"
+                className="bg-Teal text-white mt-2 px-4 py-2  hover:bg-teal-600 focus:outline-non"
+                disabled={isLoading}
+              >
+                {isLoading ? "Generating..." : "Generate Quiz"}
+              </button>
+            </div>
+          </form>
+        </div>
+        <div className="w-[50%]">
+          <div
+            className="h-screen py-10 overflow-y-auto"
+            style={{ scrollbarWidth: "thin" }}
+          >
+            {questions.map((question, index) => (
+              <div key={index} className="mb-4">
+                <div className="flex items-center justify-between">
+                  <p className="font-bold">{`Question ${index + 1}:`}</p>
 
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  class="icon icon-tabler icon-tabler-trash"
-                  onClick={() => handleDeleteQuestion(index)}
-                  width="30"
-                  height="30"
-                  viewBox="0 0 24 24"
-                  stroke-width="1.5"
-                  stroke="#ff2825"
-                  fill="none"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                >
-                  <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                  <path d="M4 7l16 0" />
-                  <path d="M10 11l0 6" />
-                  <path d="M14 11l0 6" />
-                  <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" />
-                  <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" />
-                </svg>
-              </div>
-              <input
-                type="text"
-                value={question.question_text}
-                onChange={(e) => handleInputChange(e, index, "question_text")}
-                className="mt-1 p-2 w-full border "
-                placeholder="Enter question text"
-              />
-              <div>
-                <p className="font-semibold">Correct Answer:</p>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="icon icon-tabler icon-tabler-trash"
+                    onClick={() => handleDeleteQuestion(index)}
+                    width="30"
+                    height="30"
+                    viewBox="0 0 24 24"
+                    stroke-width="1.5"
+                    stroke="#ff2825"
+                    fill="none"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                    <path d="M4 7l16 0" />
+                    <path d="M10 11l0 6" />
+                    <path d="M14 11l0 6" />
+                    <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" />
+                    <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" />
+                  </svg>
+                </div>
                 <input
                   type="text"
-                  value={question.correct_answer}
-                  onChange={(e) =>
-                    handleInputChange(e, index, "correct_answer")
-                  }
-                  className="mt-1 p-2 w-full border  bg-green-100"
-                  placeholder="Enter correct answer"
+                  value={question.question_text}
+                  onChange={(e) => handleInputChange(e, index, "question_text")}
+                  className="mt-1 p-2 w-full border "
+                  placeholder="Enter question text"
                 />
-              </div>
-              <div>
-                <p className="font-semibold">Wrong Options:</p>
-                {question.wrong_options.map((option, optionIndex) => (
+                <div>
+                  <p className="font-semibold">Correct Answer:</p>
                   <input
-                    key={optionIndex}
                     type="text"
-                    value={option}
+                    value={question.correct_answer}
                     onChange={(e) =>
-                      handleInputChange(e, index, "wrong_options", optionIndex)
+                      handleInputChange(e, index, "correct_answer")
                     }
-                    className="mt-1 p-2 w-full border "
-                    placeholder={`Enter wrong option ${optionIndex + 1}`}
+                    className="mt-1 p-2 w-full border  bg-green-100"
+                    placeholder="Enter correct answer"
                   />
-                ))}
+                </div>
+                <div>
+                  <p className="font-semibold">Wrong Options:</p>
+                  {question.wrong_options.map((option, optionIndex) => (
+                    <input
+                      key={optionIndex}
+                      type="text"
+                      value={option}
+                      onChange={(e) =>
+                        handleInputChange(
+                          e,
+                          index,
+                          "wrong_options",
+                          optionIndex
+                        )
+                      }
+                      className="mt-1 p-2 w-full border "
+                      placeholder={`Enter wrong option ${optionIndex + 1}`}
+                    />
+                  ))}
+                </div>
               </div>
-            </div>
-          ))}
-        </div>
-        {questions.length > 0 && (
-          <div className="flex items-center justify-center mt-4">
-            <button
-              type="button"
-              className="bg-Teal text-white mt-2 px-4 py-2  hover:bg-teal-600 focus:outline-non"
-              onClick={handleSubmission}
-              disabled={isLoading}
-            >
-              {isLoading ? "Submitting..." : "Submit"}
-            </button>
+            ))}
           </div>
-        )}
+          {questions.length > 0 && (
+            <div className="flex items-center justify-center mt-4">
+              <button
+                type="button"
+                className="bg-Teal text-white mt-2 px-4 py-2  hover:bg-teal-600 focus:outline-non"
+                onClick={handleSubmission}
+                disabled={isLoading}
+              >
+                {isLoading ? "Submitting..." : "Submit"}
+              </button>
+            </div>
+          )}
+        </div>
       </div>
-    </div>
     </div>
   );
 };

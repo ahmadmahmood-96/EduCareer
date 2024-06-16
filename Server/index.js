@@ -42,6 +42,7 @@ const adminUserDetailsRoute=require('./routes/adminuserdetails')
 const adminOrderDetailsRoute=require('./routes/adminorderdetails')
 const adminCourseDetailsRoute=require('./routes/admincoursedetails')
 const ratingReviewRoute=require('./routes/ratingreview')
+const gradeRoute = require('./routes/viewgrades') 
 
 
 // Database connection
@@ -88,6 +89,7 @@ app.use('/api', adminUserDetailsRoute);
 app.use('/api', adminOrderDetailsRoute);
 app.use('/api', adminCourseDetailsRoute);
 app.use('/api', ratingReviewRoute);
+app.use('/api', gradeRoute);
 
 
 let users = [];

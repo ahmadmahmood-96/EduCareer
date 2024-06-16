@@ -34,6 +34,7 @@ import Orders from "./pages/OrderSummary/orders"
 import Career from "./pages/CareerRecommendation/CareerRecommendation"
 import AdminSupport from "./pages/adminresponse"
 import Certificate from "./pages/Certificate/certificate"
+import Grades from "./pages/ViewGrades/ViewGrades"
 
 function App() {
   const user = localStorage.getItem("token");
@@ -70,6 +71,7 @@ function App() {
                 <Route path="quiz" element={<StudentQuizDetail />} />
                 <Route path="orders" element={<Orders/>} />
                 <Route path="certificates" element={<Certificate/>}/>
+                <Route path="grades" element={<Grades/>}/>
               </Route>
 
               <Route path="/career-recommendation" element={<Career/>}/>

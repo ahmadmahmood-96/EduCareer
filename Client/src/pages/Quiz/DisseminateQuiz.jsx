@@ -87,7 +87,7 @@ const DisseminateQuiz = ({ courseId }) => {
       key: "action",
       render: (_, record) => (
         <Button
-          type="primary"
+         // type="primary"
           onClick={() => handleDisseminateClick(record._id, record.title)}
         >
           Disseminate
@@ -127,7 +127,9 @@ const DisseminateQuiz = ({ courseId }) => {
                 onChange={(time, timeString) => setEndTime(timeString)}
               />
               <div>
-                <Button type="primary" htmlType="submit">
+                <Button
+                // type="primary"
+                 htmlType="submit">
                   Submit
                 </Button>
                 <Button onClick={handleCancel}>Cancel</Button>

@@ -68,45 +68,66 @@ router.get("/:id/verify/:token/", async (req, res) => {
   
  
 
-// endpoint to save quiz score
-router.post('/submit-quiz-score', async (req, res) => {
+
+//set instrcutors's eligibilty
+router.put( '/instructor-quiz/:userId', async (req, res) => {
   try {
-    const { userId, score } = req.body;
+      const {
+          userId
+      } = req.params;
+      const user = await User.findByIdAndUpdate(userId, {
+          isEligible: true
+      }, {
+          new: true
+      });
 
-    // Create a new instance of the InstructorQuizModel
-    const quizScore = new InstructorQuizModel({
-      userId,
-      score,
-      date: new Date(),
-    });
-
-    // Save the quiz score to the database
-    await quizScore.save();
-
-    res.status(201).json({ message: 'Quiz score saved successfully' });
+      if (user) {
+          return res.json({
+              success: true,
+              message: 'User set as eligible to teach'
+          });
+      } else {
+          return res.json({
+              success: false,
+              message: 'User not found'
+          });
+      }
   } catch (error) {
-    console.error('Error saving quiz score:', error);
-    res.status(500).json({ message: 'Internal server error' });
+      return res.json({
+          success: false,
+          message: 'Internal Server Error'
+      });
   }
 });
 
 
-// Route to fetch user's score
-router.get('/score/:userId', async (req, res) => {
-    try {
-        const userId = req.params.userId;
-        const user = await InstructorQuizModel.findOne({ userId });
-        if (!user) {
-            return res.status(404).json({ message: 'User score not found' });
-        }
-        const score = user.score; // Assuming the score is stored in the 'score' field
-        res.status(200).json({ score });
-    } catch (error) {
-        console.error('Error fetching user score:', error);
-        res.status(500).json({ message: 'Internal server error' });
-    }
-});
+//set instrcutors's eligibilty
+router.get( '/get-user/:userId', async (req, res) => {
+  try {
+      const {
+          userId
+      } = req.params;
+      const user = await User.findById(userId);
 
+      if (user) {
+          return res.json({
+              success: true,
+              message: 'User found',
+              isEligible: user.isEligible
+          });
+      } else {
+          return res.json({
+              success: false,
+              message: 'User not found'
+          });
+      }
+  } catch (error) {
+      return res.json({
+          success: false,
+          message: 'Internal Server Error'
+      });
+  }
+});
 
   router.get('/', async (req, res) => {
     try {

@@ -36,6 +36,11 @@ const userSchema = new mongoose.Schema({
         type: Boolean,
     },
 
+    isEligible: {
+        type: Boolean,
+        // default: false
+    },
+
     enrolledCourses: [{ type: mongoose.Schema.Types.ObjectId, ref: 'courses' }],
 });
 

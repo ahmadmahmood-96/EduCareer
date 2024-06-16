@@ -14,7 +14,7 @@ function RulesPage({ startQuiz }) {
                 </ul>
                 <button
                     onClick={startQuiz}
-                    className="bg-purple-600 text-white px-6 py-3 rounded-md shadow-md font-bold text-lg mt-6 transition duration-200 hover:bg-purple-700"
+                    className="bg-teal-600 text-white px-6 py-3 rounded-md shadow-md font-bold text-lg mt-6 transition duration-200 hover:bg-teal-700"
                 >
                     Start Quiz
                 </button>

@@ -269,4 +269,4 @@ def predict():
     return jsonify(response)
 
 if __name__ == '__main__':
-    app.run(host='192.168.1.5', debug=False, port=5000)
+    app.run(host='10.113.70.214', debug=False, port=5000)

@@ -1,11 +1,20 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useParams, useNavigate } from "react-router-dom";
-import { Modal, Table, Tooltip, Typography, message, Tag, Upload, Form, Button } from "antd";
-import {UploadOutlined, FileOutlined } from "@ant-design/icons";
+import {
+  Modal,
+  Table,
+  Tooltip,
+  Typography,
+  message,
+  Tag,
+  Upload,
+  Form,
+  Button,
+} from "antd";
+import { UploadOutlined, FileOutlined } from "@ant-design/icons";
 import { FileInput } from "lucide-react";
 import { Input } from "@mui/material";
-
 
 const SubmittedAssignments = () => {
   const { Id } = useParams();
@@ -15,9 +24,9 @@ const SubmittedAssignments = () => {
   const [grades, setGrades] = useState({});
 
   const handleGradeChange = (assignmentId, value) => {
-    setGrades(prevGrades => ({
+    setGrades((prevGrades) => ({
       ...prevGrades,
-      [assignmentId]: value
+      [assignmentId]: value,
     }));
   };
   const handleGradeSubmission = async () => {
@@ -29,12 +38,10 @@ const SubmittedAssignments = () => {
       console.log(response.data);
       setModalVisible(false);
       message.success("Successfully submitted the Grades");
-
     } catch (error) {
       console.error("Error submitting grades:", error);
     }
   };
-
 
   const handleCheckPlagiarism = async () => {
     try {
@@ -56,7 +63,7 @@ const SubmittedAssignments = () => {
 
       // Send data to backend for plagiarism check
       const response = await axios.post(
-        "http://192.168.1.5:5000/uploader",
+        "http://10.113.70.214:5000/uploader",
         formData,
         {
           headers: {
@@ -84,7 +91,7 @@ const SubmittedAssignments = () => {
     console.log(selectedAssignmentId);
     setModalVisible(true);
   };
-  
+
   const handleOpenModal = (assignmentId) => {
     setSelectedAssignmentId(assignmentId);
     setModalVisible(true);
@@ -92,7 +99,6 @@ const SubmittedAssignments = () => {
   const handleCancelModal = () => {
     setModalVisible(false);
   };
-
 
   useEffect(() => {
     const fetchSubmittedAssignments = async () => {
@@ -110,7 +116,7 @@ const SubmittedAssignments = () => {
 
     fetchSubmittedAssignments();
   }, [Id]);
-  
+
   const columns = [
     {
       key: 1,
@@ -134,7 +140,7 @@ const SubmittedAssignments = () => {
         <span>{`${firstName} ${record.userId.lastName}`}</span>
       ),
     },
-   
+
     {
       title: "Submission File",
       dataIndex: "subfile",
@@ -162,59 +168,51 @@ const SubmittedAssignments = () => {
         </Tooltip>
       ),
     },
-    
-    
-    
   ];
 
-
   return (
-   
-   
     <>
-    <Typography.Title level={2}>Submitted Assignment</Typography.Title>
+      <Typography.Title level={2}>Submitted Assignment</Typography.Title>
 
       <div className="p-5 m-8">
-         <button
-        className="mt-2 px-4 py-2 bg-Teal text-white "
-        onClick={handleCheckPlagiarism}
-      >
-        Check Plagiarism
-      </button>
+        <button
+          className="mt-2 px-4 py-2 bg-Teal text-white "
+          onClick={handleCheckPlagiarism}
+        >
+          Check Plagiarism
+        </button>
 
-      {/* Table content */}
-      <Table columns={columns} dataSource={submittedAssignments} />
+        {/* Table content */}
+        <Table columns={columns} dataSource={submittedAssignments} />
 
-     
-      <Modal
-        title="Enter Grade"
-        visible={modalVisible}
-        onCancel={handleCancelModal}
-        footer={[
-          <Button key="cancel" onClick={handleCancelModal}>
-            Cancel
-          </Button>,
-          <Button key="submit" type="primary" onClick={handleGradeSubmission}>
-            Submit
-          </Button>,
-        ]}
-      >
-        <Form>
-        <Form.Item label="Grade">
-  <Input
-    type="number"
-    value={grades[selectedAssignmentId] || ""}
-    onChange={(e) => handleGradeChange(selectedAssignmentId, e.target.value)}
-  />
-</Form.Item>
-</Form>
-      </Modal>
-    </div>
-
-       
- </>
+        <Modal
+          title="Enter Grade"
+          visible={modalVisible}
+          onCancel={handleCancelModal}
+          footer={[
+            <Button key="cancel" onClick={handleCancelModal}>
+              Cancel
+            </Button>,
+            <Button key="submit" type="primary" onClick={handleGradeSubmission}>
+              Submit
+            </Button>,
+          ]}
+        >
+          <Form>
+            <Form.Item label="Grade">
+              <Input
+                type="number"
+                value={grades[selectedAssignmentId] || ""}
+                onChange={(e) =>
+                  handleGradeChange(selectedAssignmentId, e.target.value)
+                }
+              />
+            </Form.Item>
+          </Form>
+        </Modal>
+      </div>
+    </>
   );
-        
 };
 
 export default SubmittedAssignments;
